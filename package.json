@@ -1,0 +1,25 @@
+{
+  "name": "hospital_management_system",
+  "version": "1.0.0",
+  "description": "APIs for hospital management system",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config src/index.js"
+  },
+  "author": "liam",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^16.0.1",
+    "nodemon": "^2.0.18"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1161.0",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.4.0",
+    "multer": "^1.4.5-lts.1",
+    "validator": "^13.7.0"
+  }
+}
