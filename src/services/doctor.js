@@ -83,6 +83,8 @@ const deleteDoctor = async ( doctor_id ) => {
 
         if(!doctor) throw new Error("Doctor not found!");
 
+        await doctor.remove();
+
         return doctor;
     } catch(e) {
         throw new Error(e);
