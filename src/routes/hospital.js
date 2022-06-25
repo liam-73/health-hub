@@ -8,6 +8,7 @@ const hospitalHandlers = require('../handlers/hospital');
 
 // middlewares
 const auth = require('../authentication/auth');
+const bodyParser = require("body-parser");
 
 const storage = multer.memoryStorage();
 
@@ -26,7 +27,7 @@ const upload = multer({ storage, fileFilter, limits: { fileSize: 1024 * 1024 * 1
 
 router.post( "/profile", upload.single('profile'), hospitalHandlers.createHospitalProfile );
 
-router.post( "/login", hospitalHandlers.login );
+router.post( "/login", upload.none(), hospitalHandlers.login );
 
 router.get( "/profile", auth, hospitalHandlers.getProfile );
 

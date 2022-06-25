@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const doctorSchema = new mongoose.Schema(
     {
+        profile: {
+            type: String
+        },
+
         name: {
             type: String,
             required: true
@@ -20,7 +24,7 @@ const doctorSchema = new mongoose.Schema(
             type: String
         },
 
-        specilization: {
+        specialization: {
             type: String,
             required: true
         },
@@ -32,6 +36,11 @@ const doctorSchema = new mongoose.Schema(
 
         daily_token_numbers: {
             type: Number
+        },
+        
+        hospital: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Hospital"
         }
     },
     {

@@ -2,13 +2,10 @@ const bcrypt = require('bcrypt');
 
 // modules
 const { photoUpload } = require("../modules/photo");
+const { authToken } = require("../authentication/generateToken");
 
 // schema
 const Hospital = require("../models/hospital");
-
-const { authToken } = require("../authentication/generateToken");
-
-
 
 const createHospitalProfile = async (hospital_data, file) => {
     try {

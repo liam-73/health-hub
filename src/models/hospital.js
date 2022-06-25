@@ -33,6 +33,12 @@ const hospitalSchema = new mongoose.Schema(
     }
 );
 
+hospitalSchema.virtual( "doctors", {
+    ref: "Doctor",
+    localField: "_id",
+    foreignField: "hospital"
+});
+
 hospitalSchema.pre( 'save', async function (next) {
     const hospital = this;
 
