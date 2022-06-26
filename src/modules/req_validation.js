@@ -3,7 +3,7 @@ const validator = require("validator");
 const request_validation = async ( body ) => {
     const requested_fields = Object.keys(body);
 
-    const valid_fields = [ 'profile', 'name', 'password', 'email', 'address', 'dateOfBirth', 'specialization', 'appointment_fee', 'daily_token_numbers' ];
+    const valid_fields = [ 'profile', 'name', 'password', 'email', 'address', 'dateOfBirth', 'specialization', 'appointment_fee', 'daily_token_numbers', 'hospital', 'role' ];
 
     const validOperation = requested_fields.every( field => valid_fields.includes(field) );
 

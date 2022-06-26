@@ -6,6 +6,7 @@ const cors = require('cors');
 const hospitalRouter = require("../src/routes/hospital");
 const doctorRouter = require("./routes/doctor");
 const patientRouter = require("./routes/patient");
+const staffRouter = require("./routes/staff");
 
 const app = express();
 const port = process.env.PORT;
@@ -19,6 +20,7 @@ app.use( cors() );
 app.use( "/hospital", hospitalRouter );
 app.use( doctorRouter );
 app.use( patientRouter );
+app.use( staffRouter );
 
 app.use( ( error, req, res, next ) => {
     const status = error.status || 500;

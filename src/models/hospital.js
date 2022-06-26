@@ -39,6 +39,18 @@ hospitalSchema.virtual( "doctors", {
     foreignField: "hospital"
 });
 
+hospitalSchema.virtual( "patients", {
+    ref: "Patient",
+    localField: "_id",
+    foreignField: "hospital"
+});
+
+hospitalSchema.virtual( "staffs", {
+    ref: "Staff",
+    localField: "_id",
+    foreignField: "hospital"
+});
+
 hospitalSchema.pre( 'save', async function (next) {
     const hospital = this;
 
