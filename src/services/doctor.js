@@ -1,6 +1,5 @@
 // modules
 const { photoUpload } = require("../modules/photo");
-const { authToken } = require("../authentication/generateToken");
 
 // schema
 const Doctor = require("../models/doctor");
@@ -34,7 +33,7 @@ const addDoctor = async (request_body, hospital, file) => {
             return doctor;
         }
     } catch(e) {
-        throw new Error(e);
+        throw (e);
     }
 };
 
@@ -46,7 +45,7 @@ const getDoctor = async ( doctor_id ) => {
 
         return doctor;
     } catch(e) {
-        throw new Error(e);
+        throw (e);
     }
 };
 
@@ -73,7 +72,7 @@ const editDoctor = async ( request_body, doctor_id, file ) => {
 
         return doctor;
     } catch(e) {
-        throw new Error(e);
+        throw (e);
     }
 };
 
@@ -97,7 +96,7 @@ const getAllDoctors = async (hospital) => {
 
         return doctors;
     } catch(e) {
-        throw new Error(e);
+        throw (e);
     }
 }
 

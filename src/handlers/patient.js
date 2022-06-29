@@ -108,7 +108,7 @@ const getAllPatients = async (req, res) => {
     try {
         const patients = await patientControllers.getAllPatients( req.hospital );
 
-        res.json(patients);
+        res.json({ patients, count: patients.length });
     } catch(e) {
         res.status(500).json({ message: e.message });
     }

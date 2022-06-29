@@ -48,6 +48,12 @@ const doctorSchema = new mongoose.Schema(
     }
 );
 
+doctorSchema.virtual("appointments", {
+    ref: "Appointment",
+    localField: "_id",
+    foreignField: "doctor_id"
+});
+
 const Doctor = mongoose.model( "Doctor", doctorSchema );
 
 module.exports = Doctor;

@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
+// schemas
+const Doctor = require('./doctor');
+const Patient = require('./patient');
+const Appointment = require('./appointment');
+const Staff = require('./staff');
+
 const hospitalSchema = new mongoose.Schema(
     {
         name: {
@@ -51,6 +57,12 @@ hospitalSchema.virtual( "staffs", {
     foreignField: "hospital"
 });
 
+hospitalSchema.virtual( "appointments", {
+    ref: "Appointment",
+    localField: "_id",
+    foreignField: "hospital"
+});
+
 hospitalSchema.pre( 'save', async function (next) {
     const hospital = this;
 
@@ -58,6 +70,17 @@ hospitalSchema.pre( 'save', async function (next) {
         hospital.password = await bcrypt.hash( hospital.password, 8 );
     }
     
+    next();
+});
+
+hospitalSchema.pre( 'remove', async function (next) {
+    const hospital = this;
+
+    await Doctor.deleteMany({ hospital: hospital._id });
+    await Patient.deleteMany({ hospital: hospital._id });
+    await Appointment.deleteMany({ hospital: hospital._id });
+    await Staff.deleteMany({ hospital: hospital._id });
+
     next();
 });
 

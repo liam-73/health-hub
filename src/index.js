@@ -1,12 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 // routers
 const hospitalRouter = require("../src/routes/hospital");
 const doctorRouter = require("./routes/doctor");
 const patientRouter = require("./routes/patient");
 const staffRouter = require("./routes/staff");
+const appointmentRouter = require("./routes/appointment");
 
 const app = express();
 const port = process.env.PORT;
@@ -14,6 +16,8 @@ const port = process.env.PORT;
 mongoose.connect(process.env.MONGODB_URL);
 
 app.use( express.json() );
+app.use( bodyParser.json());
+app.use( bodyParser.urlencoded({ extended: true }) );
 
 app.use( cors() );
 
@@ -21,6 +25,7 @@ app.use( "/hospital", hospitalRouter );
 app.use( doctorRouter );
 app.use( patientRouter );
 app.use( staffRouter );
+app.use( appointmentRouter );
 
 app.use( ( error, req, res, next ) => {
     const status = error.status || 500;
