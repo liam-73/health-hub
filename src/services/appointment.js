@@ -1,15 +1,15 @@
 const moment = require('moment');
 
 // schemas
-const Doctor = require("../models/doctor");
-const Patient = require("../models/patient");
 const Appointment = require("../models/appointment");
+const Transacition = require("../models/transaction");
+const User = require("../models/user");
 
 const makeAppointment = async ( request_body, hospital ) => {
     try {
-        const doctor = await Doctor.findById(request_body.doctor_id);
+        const doctor = await User.findById(request_body.doctor_id);
 
-        if(!doctor) throw new Error("Doctor not found!");
+        if(!doctor || doctor.role !== 'doctor') throw new Error("Doctor not found!");
 
         const appointments = await Appointment.aggregate([
             {
@@ -20,25 +20,34 @@ const makeAppointment = async ( request_body, hospital ) => {
             }
         ]);
 
-        if(appointments.length >= doctor.daily_token_numbers ) {
+        if(appointments.length >= doctor.doctor_data.daily_token_numbers ) {
             throw new Error("Out of tokens, try again later!");
         }
 
-        const patient = await Patient.findById(request_body.patient_id);
-
-        if(!patient) throw new Error("Patient not found!");
-
-        const appointment = await new Appointment({
-            doctor_id: doctor._id,
-            patient_id: patient._id,
-            fee: doctor.appointment_fee,
-            date: moment().format("MM-DD-YYYY"),
-            hospital: hospital._id
-        });
-
-        await appointment.save();
-
-        return appointment;
+        else {
+            const patient = await User.findById(request_body.patient_id);
+    
+            if(!patient || patient.role !== 'patient') throw new Error("Patient not found!");
+    
+            const appointment = await new Appointment({
+                doctor_id: doctor._id,
+                patient_id: patient._id,
+                fee: doctor.doctor_data.appointment_fee,
+                date: moment().format("MM-DD-YYYY"),
+                hospital: hospital._id
+            });
+    
+            await appointment.save();
+    
+            await Transacition.create({
+                doctor_id: doctor._id,
+                patient_id: patient._id,
+                amount: doctor.doctor_data.appointment_fee,
+                hospital: hospital._id
+            });
+    
+            return appointment;
+        }
     } catch(e) {
         throw (e);
     }
@@ -46,7 +55,7 @@ const makeAppointment = async ( request_body, hospital ) => {
 
 const getAppointmentsByDoctorId = async (doctorId) => {
     try {
-        const doctor = await Doctor
+        const doctor = await User
             .findById(doctorId)
             .populate({ 
                 path: 'appointments',

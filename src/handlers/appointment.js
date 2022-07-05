@@ -109,5 +109,5 @@ module.exports = {
     getAppointmentsByDate,
     editAppointment,
     deleteAppointment,
-    getAllAppointments,
+    getAllAppointments
 };

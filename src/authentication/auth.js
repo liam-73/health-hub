@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
-const Hospital = require("../models/hospital");
+// schema
+const Admin = require("../models/admin");
 
 const auth = async (req, res, next) => {
     try {
@@ -8,11 +9,13 @@ const auth = async (req, res, next) => {
 
         const decoded = jwt.verify( token, process.env.JWT_SECRET );
 
-        const hospital = await Hospital.findById(decoded._id);
+        const admin = await Admin.findById(decoded._id).populate('hospital');
 
-        if(!hospital) throw new Error("Token is missing or invalid!");
+        if(!admin) throw new Error("Token is missing or invalid!");
 
-        req.hospital = hospital;
+        req.admin = admin;
+        req.hospital = admin.hospital
+
         next();
     } catch(e) {
         if( e.message === "Token is missing or invalid!" ) {

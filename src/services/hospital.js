@@ -1,8 +1,5 @@
-const bcrypt = require('bcrypt');
-
 // modules
 const { photoUpload } = require("../modules/photo");
-const { authToken } = require("../authentication/generateToken");
 
 // schema
 const Hospital = require("../models/hospital");
@@ -23,9 +20,7 @@ const createHospitalProfile = async (hospital_data, file) => {
 
             await hospital.save();
 
-            const token = await authToken(hospital);
-
-            return { hospital, token };
+            return hospital;
         } else {
             const hospital = await new Hospital({
                 ...hospital_data
@@ -38,25 +33,7 @@ const createHospitalProfile = async (hospital_data, file) => {
             return { hospital, token };
         }
     } catch(e) {
-        throw new Error(e);
-    }
-};
-
-const login = async ( email, password ) => {
-    try {
-        const hospital = await Hospital.findOne({ email });
-
-        if(!hospital) throw new Error("Wrong Email!");
-
-        const isMatch = await bcrypt.compare( password, hospital.password );
-
-        if(!isMatch) throw new Error("Wrong Password!");
-
-        const token = await authToken(hospital);
-
-        return { hospital, token };
-    } catch(e) {
-        throw new Error(e);
+        throw (e);
     }
 };
 
@@ -68,24 +45,19 @@ const editProfile = async ( hospital, requestBody, file ) => {
             const profile = await photoUpload(file);
 
             hospital.profile = profile;
-
-            edits.forEach(  edit => hospital[edit] = requestBody[edit] );
-
-            await hospital.save();
-        } else {
-            edits.forEach(  edit => hospital[edit] = requestBody[edit] );
-
-            await hospital.save();
         }
+        
+        edits.forEach(  edit => hospital[edit] = requestBody[edit] );
+        
+        await hospital.save();
 
         return hospital;
     } catch(e) {
-        throw new Error(e);
+        throw (e);
     }
 }
 
 module.exports = {
     createHospitalProfile,
-    login,
     editProfile,
 };

@@ -10,7 +10,6 @@ const auth = require("../authentication/auth");
 // handlers
 const appointmentHandlers = require("../handlers/appointment");
 
-
 router.post('/make_appointment', upload.any(), auth, appointmentHandlers.makeAppointment );
 
 router.get( '/appointments', auth, appointmentHandlers.getAppointmentsByDoctorId );
@@ -23,4 +22,4 @@ router.delete( '/delete_appointment', auth, appointmentHandlers.deleteAppointmen
 
 router.get( '/all_appointments', auth, appointmentHandlers.getAllAppointments );
 
-module.exports = router;
+module.exports = router; 

@@ -1,5 +1,5 @@
 // modules
-const { request_validation } = require("../modules/req_validation");
+const { request_validation } = require("./request.handler");
 
 // controllers
 const hospitalControllers = require("../controllers/hospital");
@@ -12,17 +12,10 @@ const createHospitalProfile = async (req, res) => {
             if( typeof item !== 'string' ) throw new Error("Invalid Input!");
         }
 
-        if(req.file) {
-            if( req.file.fieldname !== 'profile' )  throw new Error("Fieldname must be profile!");
+        const data = await hospitalControllers.createHospitalProfile(request_body, req.file);
 
-            const data = await hospitalControllers.createHospitalProfile( request_body, req.file );
-
-            return res.status(201).json({ hospital: data.hospital, token: data.token });
-        } else {
-            const data = await hospitalControllers.createHospitalProfile(request_body);
-
-            return res.status(201).json({ hospital: data.hospital, token: data.token });
-        }
+        return res.status(201).json({ hospital: data.hospital, token: data.token });
+        
     } catch(e) {
         if( e.message === "Invalid Input!" || e.message === "Fieldname must be profile" || e.message === "Invalid Email!" ) {
             return res.status(400).json({ message: e.message });
@@ -33,30 +26,6 @@ const createHospitalProfile = async (req, res) => {
         }
 
         // return next(e);
-        res.status(500).json({ message: e.message });
-    }
-};
-
-const login = async (req, res) => {
-    try {
-        const request_body = await request_validation(req.body);
-
-        for( item in request_body ) {
-            if( typeof item !== 'string' ) throw new Error("Invalid Input!");
-        }
-
-        const data = await hospitalControllers.login( request_body.email, request_body.password );
-
-        res.json({ hospital: data.hospital, token: data.token });
-    } catch(e) {
-        if( e.message === "Invalid Input!" || e.message === "Invalid Email!" || e.message === "Wrong Password!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
-        else if( e.message === "Wrong Email!" ) {
-            return res.status(404).json({ message: e.message });
-        }
-
         res.status(500).json({ message: e.message });
     }
 };
@@ -77,15 +46,11 @@ const editProfile = async (req, res) => {
             if( typeof item !== 'string' ) throw new Error("Invalid Input!");
         }
 
-        if(req.file) {
-            const hospital = await hospitalControllers.editProfile( req.hospital, request_body, req.file );
+        console.log(req.file);
 
-            res.json(hospital);
-        } else {
-            const hospital = await hospitalControllers.editProfile( req.hospital, request_body );
+        const hospital = await hospitalControllers.editProfile( req.hospital, request_body, req.file );
 
-            res.json(hospital);
-        }
+        res.json(hospital);
     } catch(e) {
         if( e.message === "Invalid Input!" || e.message === "Invalid Email!" ) {
             return res.status(400).json({ message: e.message });
@@ -107,7 +72,6 @@ const deleteHospital = async (req, res) => {
 
 module.exports = {
     createHospitalProfile,
-    login,
     getProfile,
     editProfile,
     deleteHospital,

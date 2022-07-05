@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 // schemas
-const Doctor = require('./doctor');
-const Patient = require('./patient');
 const Appointment = require('./appointment');
-const Staff = require('./staff');
+const Transaction = require("./transaction");
+const User = require("./user");
+const Admin = require("./admin")
 
 const hospitalSchema = new mongoose.Schema(
     {
@@ -26,11 +26,20 @@ const hospitalSchema = new mongoose.Schema(
             required: true
         },
 
+        phone_number: {
+            type: String,
+            trim: true,
+        },
+
         address: {
             type: String
         },
 
         profile: {
+            type: String
+        },
+
+        description: {
             type: String
         }
     },
@@ -39,26 +48,32 @@ const hospitalSchema = new mongoose.Schema(
     }
 );
 
-hospitalSchema.virtual( "doctors", {
-    ref: "Doctor",
+hospitalSchema.virtual( "users", {
+    ref: "User",
     localField: "_id",
     foreignField: "hospital"
 });
 
-hospitalSchema.virtual( "patients", {
-    ref: "Patient",
-    localField: "_id",
-    foreignField: "hospital"
-});
-
-hospitalSchema.virtual( "staffs", {
-    ref: "Staff",
-    localField: "_id",
-    foreignField: "hospital"
+hospitalSchema.virtual( "admins", {
+    ref: "Admin",
+    localField: '_id',
+    foreignField: 'hospital'
 });
 
 hospitalSchema.virtual( "appointments", {
     ref: "Appointment",
+    localField: "_id",
+    foreignField: "hospital"
+});
+
+hospitalSchema.virtual( "transactions", {
+    ref: "Transaction",
+    localField: "_id",
+    foreignField: "hospital"
+});
+
+hospitalSchema.virtual( "admins", {
+    ref: "Admin",
     localField: "_id",
     foreignField: "hospital"
 });
@@ -74,12 +89,12 @@ hospitalSchema.pre( 'save', async function (next) {
 });
 
 hospitalSchema.pre( 'remove', async function (next) {
-    const hospital = this;
+    const hospital = this.hospital;
 
-    await Doctor.deleteMany({ hospital: hospital._id });
-    await Patient.deleteMany({ hospital: hospital._id });
-    await Appointment.deleteMany({ hospital: hospital._id });
-    await Staff.deleteMany({ hospital: hospital._id });
+    await Admin.deleteMany({ hospital});
+    await User.deleteMany({ hospital});
+    await Appointment.deleteMany({ hospital });
+    await Transaction.deleteMany({ hospital });
 
     next();
 });

@@ -1,25 +1,19 @@
 const mongoose = require("mongoose");
 
-const appointmentSchema = new mongoose.Schema(
+const transactionSchema = new mongoose.Schema(
     {
         doctor_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'Doctor'
         },
 
         patient_id: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'Patient'
         },
 
-        fee: {
-            type: Number,
-            required: true
-        },
-
-        date: {
-            type: String,
-            required: true
+        amount: {
+            type: Number
         },
 
         hospital: {
@@ -32,6 +26,6 @@ const appointmentSchema = new mongoose.Schema(
     }
 );
 
-const Appointment = mongoose.model("Appointment", appointmentSchema );
+const Transaction = mongoose.model( 'Transaction', transactionSchema );
 
-module.exports = Appointment;
+module.exports = Transaction;
