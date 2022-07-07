@@ -1,6 +1,8 @@
 // modules
 const { request_validation } = require("./request.handler");
 
+const moment = require("moment");
+
 // controllers
 const userControllers = require('../controllers/user');
 
@@ -29,9 +31,9 @@ const addUser = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try {
-        if(!req.query.id) throw new Error('You must provide user id!');
+        if(!req.params.id) throw new Error('You must provide user id!');
 
-        const user = await userControllers.getUserById( req.query.id );
+        const user = await userControllers.getUserById( req.params.id );
 
         res.json(user);
     } catch(e) {
@@ -39,7 +41,7 @@ const getUserById = async (req, res) => {
             return res.status(404).json({ message: e.message });
         }
 
-        else if( e.message === "You must provide patient id!" ) {
+        else if( e.message === "You must provide user id!" ) {
             return res.status(400).json({ message: e.message });
         }
 
@@ -49,11 +51,11 @@ const getUserById = async (req, res) => {
 
 const editUser = async (req, res) => {
     try {
-        if(!req.query.id) throw new Error('You must provide user id!');
+        if(!req.params.id) throw new Error('You must provide user id!');
 
         const request_body = await request_validation(req.body);
 
-        const user = await userControllers.editUser( request_body, req.query.id, req.file );
+        const user = await userControllers.editUser( request_body, req.params.id, req.file );
 
         return res.json(user);
     } catch(e) {
@@ -75,7 +77,7 @@ const editUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        if(!req.query.id) throw new Error("You must provide user id in query!");
+        if(!req.params.id) throw new Error("You must provide user id!");
 
         const user = await userControllers.deleteUser( req.query.id );
 
@@ -118,6 +120,20 @@ const getPatientsByDate = async (req, res) => {
     }
 };
 
+const getStaffsByDate = async (req, res) => {
+    try {
+        if(!req.query.date) throw new Error("You must provide a date!");
+
+        const start_date = moment(new Date(req.query.date).toISOString()).subtract(1, 'months').format("YYYY-MM-DD");
+
+        const data = await userControllers.getStaffsByDate(start_date, req.query.date);
+
+        res.json(data);
+    } catch(e) {
+        res.status(500).json({message: e.message});
+    }
+};
+
 const getAllUsers = async (req, res) => {
     try {
         const users = await userControllers.getAllUsers();
@@ -128,32 +144,33 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-const getAllDoctors = async (req, res) => {
+const getUsersByRole = async (req, res) => {
     try {
-        const doctors = await userControllers.getAllDoctors();
+        if(!req.query.role || typeof req.query.role !== 'string' ) throw new Error("you must provide role (string)!");
 
-        res.json({ doctors });
+        const  users = await userControllers.getUsersByRole(req.query.role);
+
+        res.json({ users });
     } catch(e) {
+        if( e.message === "you must provide role (string)!" ) {
+            return res.status(400).json({ message: e.message });
+        }
+
         res.status(500).json({ message: e.message });
     }
 };
 
-const getAllPatients = async (req, res) => {
+const getUsersByNameAndRole = async (req, res) => {
     try {
-        const patients = await userControllers.getAllPatients();
+        if(!req.query.name || !req.query.role ) throw new Error("you must provide a name and role!");
 
-        res.json({ patients });
+        const users = await userControllers.getUsersByNameAndRole(req.query.name, req.query.role);
+
+        res.json({ users });
     } catch(e) {
-        res.status(500).json({ message: e.message });
-    }
-};
-
-const getAllStaffs = async (req, res) => {
-    try {
-        const staffs = await userControllers.getAllStaffs();
-
-        res.json({ staffs });
-    } catch(e) {
+        if( e.message === "you must provide a name!" ) {
+            return res.status(400).json({ message: e.message });
+        }
         res.status(500).json({ message: e.message });
     }
 };
@@ -164,8 +181,8 @@ module.exports = {
     editUser,
     deleteUser,
     getAllUsers,
-    getAllDoctors,
-    getAllPatients,
-    getAllStaffs,
+    getUsersByRole,
     getPatientsByDate,
+    getStaffsByDate,
+    getUsersByNameAndRole,
 };

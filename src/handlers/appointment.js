@@ -29,12 +29,18 @@ const makeAppointment = async (req, res) => {
 
 const getAppointmentsByDoctorId = async (req, res) => {
     try {
-        const appointments = await appointmentController.getAppointmentsByDoctorId( req.query.id );
+        if(!req.params.id) throw new Error("you must provide doctor id!");
+
+        const appointments = await appointmentController.getAppointmentsByDoctorId( req.params.id );
 
         res.json({ appointments, count: appointments.length });
     } catch(e) {
         if( e.message === "Doctor not found!" ) {
             return res.status(404).json({ message: e.message });
+        }
+
+        else if( e.message === "you must provide doctor id!" ) {
+            return res.status(400).json({ message: e.message });
         }
 
         res.status(500).json({ message: e.message });
@@ -57,7 +63,7 @@ const getAppointmentsByDate = async (req, res) => {
 
 const editAppointment = async (req, res) => {
     try {
-        if(!req.query.id) throw new Error("You must provide appointment id!");
+        if(!req.params.id) throw new Error("You must provide appointment id!");
 
         const requested_fields = Object.keys(req.body);
 
@@ -67,7 +73,7 @@ const editAppointment = async (req, res) => {
 
         if(!valid_operation) throw new Error("Invalid Input");
 
-        const appointment = await appointmentController.editAppointment(req.body, req.query.id);
+        const appointment = await appointmentController.editAppointment(req.body, req.params.id);
 
         res.json(appointment);
     } catch(e) {
@@ -81,11 +87,17 @@ const editAppointment = async (req, res) => {
 
 const deleteAppointment = async (req, res) => {
     try {
-        const deletedAppointment = await appointmentController.deleteAppointment( req.query.id );
+        if(!req.params.id) throw new Error("You must provide appointment id!");
+
+        const deletedAppointment = await appointmentController.deleteAppointment( req.params.id );
 
         res.json(deletedAppointment);
     } catch(e) {
-        if( e.message === "Appointment not found!") {
+        if( e.message === "You must provide appointment id!" ) {
+            return res.status(400).json({ message: e.message });
+        }
+        
+        else if( e.message === "Appointment not found!") {
             return res.status(404).json({ message: e.message });
         }
 

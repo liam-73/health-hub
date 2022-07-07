@@ -70,6 +70,8 @@ userSchema.virtual("transacitions", {
     foreignField: "patient_id"
 });
 
+userSchema.index({ name: "text" });
+
 const User = mongoose.model( "User", userSchema );
 
 module.exports = User;

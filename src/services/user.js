@@ -93,42 +93,13 @@ const getAllUsers = async () => {
     }
 };
 
-const getAllDoctors = async () => {
+const getUsersByRole = async (role) => {
     try {
-        const doctors = await User.find({ role: 'doctor'});
+        const users = await User.find({ role });
 
-        return doctors;
+        return users;
     } catch(e) {
         throw (e);
-    }
-};
-
-const getAllPatients = async () => {
-    try {
-        const patients = await User.find({ role: 'patient' });
-
-        return patients;
-    } catch(e) {
-        throw (e);
-    }
-};
-
-const getAllStaffs = async () => {
-    try {
-        const staffs = await User.aggregate([
-            {
-                $match: {
-                    $and: [
-                        { role: { $ne: 'doctor' } },
-                        { role: { $ne: 'patient' } }
-                    ]
-                }
-            }
-        ]);
-
-        return staffs;
-    } catch(e) {
-        throw new Error(e);
     }
 };
 
@@ -183,14 +154,79 @@ const getPatientsByDate = async (start_date, end_date) => {
     }
 };
 
+const getStaffsByDate = async (start_date, end_date) => {
+    try {
+        const data = await User.aggregate([
+            {
+                $match: {
+                    $and: [
+                        { role: { $ne: 'doctor' } },
+                        { role: { $ne: 'patient' } }
+                    ],
+                    createdAt: {
+                        $gte: new Date(start_date),
+                        $lte: new Date(end_date)
+                    }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    date: {
+                        $dateToString: {
+                            format: '%Y-%m-%d',
+                            date: '$createdAt'
+                        }
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: "$date",
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        const result = R.compose(
+            R.mergeAll,
+            R.map( ({_id, count}) => ({ [_id]: count }) )
+        );
+
+        return result(data);
+    } catch(e) {
+        throw (e);
+    }
+};
+
+const getUsersByNameAndRole = async (name, role) => {
+    try {
+        const users = await User.aggregate([
+            {
+                $match: { 
+                    name: {
+                        $regex: name,
+                        $options: 'ix'
+                    },
+                    role
+                }
+            }
+        ]);
+
+        return users;
+    } catch(e) {
+        throw (e);
+    }
+};
+
 module.exports = {
     addUser,
     getUserById,
     editUser,
     deleteUser,
     getAllUsers,
-    getAllDoctors,
-    getAllPatients,
-    getAllStaffs,
+    getUsersByRole,
     getPatientsByDate,
+    getStaffsByDate,
+    getUsersByNameAndRole,
 };

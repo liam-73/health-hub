@@ -26,20 +26,20 @@ const upload = multer({ storage, fileFilter, limits: { fileSize: 1024 * 1024 * 1
 
 router.post( "/add_user", upload.single('profile'), auth, userHandlers.addUser );
 
-router.get( "/users", auth, userHandlers.getUserById );
+router.get( "/users/:id", auth, userHandlers.getUserById );
 
-router.patch( "/edit_user", upload.single('profile'), auth, userHandlers.editUser );
+router.patch( "/users/:id", upload.single('profile'), auth, userHandlers.editUser );
 
-router.delete( "/users", auth, userHandlers.deleteUser );
+router.delete( "/users/:id", auth, userHandlers.deleteUser );
 
 router.get( "/all_users", auth, userHandlers.getAllUsers );
 
-router.get( "/all_doctors", auth, userHandlers.getAllDoctors );
-
-router.get( "/all_patients", auth, userHandlers.getAllPatients );
-
-router.get( "/all_staffs", auth, userHandlers.getAllStaffs );
+router.get( "/get_users_by_role", auth, userHandlers.getUsersByRole );
 
 router.get( "/get_patient_rate", auth, userHandlers.getPatientsByDate );
+
+router.get( "/get_staff_rate", auth, userHandlers.getStaffsByDate );
+
+router.get( "/search_users", auth, userHandlers.getUsersByNameAndRole );
 
 module.exports = router;
