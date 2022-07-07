@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
         dateOfBirth: {
             type: String
         },
+
+        gender: {
+            type: String
+        },
         
         doctor_data: {
             specialization: {

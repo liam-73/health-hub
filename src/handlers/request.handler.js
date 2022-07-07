@@ -9,6 +9,7 @@ const request_validation = async ( body ) => {
         password: Joi.string(),
         address: Joi.string(),
         dateOfBirth: Joi.string(),
+        gender: Joi.string(),
         specialization: Joi.string(),
         appointment_fee: Joi.number(),
         daily_token_numbers: Joi.number(),
@@ -21,7 +22,7 @@ const request_validation = async ( body ) => {
 
     const requested_fields = Object.keys(body);
 
-    const valid_fields = [ 'profile', 'name', 'user_id', 'password', 'email', 'address', 'dateOfBirth', 'specialization', 'appointment_fee', 'daily_token_numbers', 'hospital', 'role' ];
+    const valid_fields = [ 'profile', 'name', 'user_id', 'password', 'email', 'address', 'dateOfBirth', 'gender', 'specialization', 'appointment_fee', 'daily_token_numbers', 'hospital', 'role' ];
 
     const validOperation = requested_fields.every( field => valid_fields.includes(field) );
 
