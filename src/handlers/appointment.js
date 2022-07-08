@@ -1,7 +1,7 @@
 // controllers
 const appointmentController = require("../controllers/appointment");
 
-const makeAppointment = async (req, res) => {
+const makeAppointment = async (req, res, next) => {
     try {
         const requested_fields = Object.keys(req.body);
 
@@ -23,11 +23,11 @@ const makeAppointment = async (req, res) => {
             return res.status(404).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const getAppointmentsByDoctorId = async (req, res) => {
+const getAppointmentsByDoctorId = async (req, res, next) => {
     try {
         if(!req.params.id) throw new Error("you must provide doctor id!");
 
@@ -43,11 +43,11 @@ const getAppointmentsByDoctorId = async (req, res) => {
             return res.status(400).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const getAppointmentsByDate = async (req, res) => {
+const getAppointmentsByDate = async (req, res, next) => {
     try {
         const appointments = await appointmentController.getAppointmentsByDate( req.query.start_date, req.query.end_date );
 
@@ -57,11 +57,11 @@ const getAppointmentsByDate = async (req, res) => {
             return res.status(404).json({ message: e.message });
         }
     
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const editAppointment = async (req, res) => {
+const editAppointment = async (req, res, next) => {
     try {
         if(!req.params.id) throw new Error("You must provide appointment id!");
 
@@ -81,11 +81,11 @@ const editAppointment = async (req, res) => {
             return res.status(400).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const deleteAppointment = async (req, res) => {
+const deleteAppointment = async (req, res, next) => {
     try {
         if(!req.params.id) throw new Error("You must provide appointment id!");
 
@@ -101,17 +101,17 @@ const deleteAppointment = async (req, res) => {
             return res.status(404).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const getAllAppointments = async (req, res) => {
+const getAllAppointments = async (req, res, next) => {
     try {
         const appointments = await appointmentController.getAllAppointments(req.hospital, req.query.limit);
 
         res.json({ appointments, count: appointments.length });
     } catch(e) {
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 

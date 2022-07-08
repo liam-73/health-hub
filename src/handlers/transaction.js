@@ -1,7 +1,7 @@
 // controllers
 const transactionControllers = require("../controllers/transaction");
 
-const getTransactionsByDate = async (req, res) => {
+const getTransactionsByDate = async (req, res, next) => {
     try {
         if(!req.query.start_date || !req.query.end_date) throw new Error("You must provide start date and end date!");
 
@@ -12,21 +12,22 @@ const getTransactionsByDate = async (req, res) => {
         if( e.message === "You must provide start date and end date!" ) {
             return res.status(400).json({ message: e.message });
         }
-        res.status(500).json({ message: e.message });
+        
+        next(e);
     }
 };
 
-const getAllTransactions = async (req, res) => {
+const getAllTransactions = async (req, res, next) => {
     try {
         const transactions = await transactionControllers.getAllTransactions(req.hospital);
 
         res.json({ transactions });
     } catch(e) {
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const getTransactionsOfDoctor = async (req, res) => {
+const getTransactionsOfDoctor = async (req, res, next) => {
     try {
         if( !req.query.doctor_id ) throw new Error("You must provide doctor id!");
 
@@ -38,7 +39,7 @@ const getTransactionsOfDoctor = async (req, res) => {
             return res.status(400).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 }
 

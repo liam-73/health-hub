@@ -4,7 +4,7 @@ const { hospital_validation } = require("./request.handler");
 // controllers
 const hospitalControllers = require("../controllers/hospital");
 
-const createHospitalProfile = async (req, res) => {
+const createHospitalProfile = async (req, res, next) => {
     try {
         const request_body = await hospital_validation(req.body);
 
@@ -21,20 +21,19 @@ const createHospitalProfile = async (req, res) => {
             return res.status(409).json({ message: e.message });
         }
 
-        // return next(e);
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const getProfile = async (req, res) => {
+const getProfile = async (req, res, next) => {
     try {
         res.json( req.hospital );
     } catch(e) {
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const editProfile = async (req, res) => {
+const editProfile = async (req, res, next) => {
     try {
         const request_body = await hospital_validation(req.body);
 
@@ -46,17 +45,17 @@ const editProfile = async (req, res) => {
             return res.status(400).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const deleteHospital = async (req, res) => {
+const deleteHospital = async (req, res, next) => {
     try {
         await req.hospital.remove();
 
         res.json({ message: "Hospital deleted!" });
     } catch(e) {
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 

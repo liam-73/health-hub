@@ -8,7 +8,7 @@ const Admin = require("../models/admin");
 // controllers
 const adminControllers = require("../controllers/admin");
 
-const addNewAdmin = async ( req, res ) => {
+const addNewAdmin = async ( req, res, next ) => {
     try {
         const user_id = uuidv4();
         const password = uuidv4();
@@ -17,11 +17,11 @@ const addNewAdmin = async ( req, res ) => {
     
         res.status(201).json({ user_id, password });
     } catch(e) {
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const login = async ( req, res ) => {
+const login = async ( req, res, next ) => {
     try {
         const body = await request_validation(req.body);
         const {user_id, password} = body;
@@ -38,7 +38,7 @@ const login = async ( req, res ) => {
             return res.status(404).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 

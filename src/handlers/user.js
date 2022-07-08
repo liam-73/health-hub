@@ -10,7 +10,7 @@ const moment = require("moment");
 // controllers
 const userControllers = require('../controllers/user');
 
-const addUser = async (req, res) => {
+const addUser = async (req, res, next) => {
     try {
         let request_body;
 
@@ -43,11 +43,11 @@ const addUser = async (req, res) => {
             return res.status(409).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
     try {
         if(!req.params.id) throw new Error('You must provide user id!');
 
@@ -63,11 +63,11 @@ const getUserById = async (req, res) => {
             return res.status(400).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const editUser = async (req, res) => {
+const editUser = async (req, res, next) => {
     try {
         if(!req.params.id) throw new Error('You must provide user id!');
 
@@ -89,11 +89,11 @@ const editUser = async (req, res) => {
             return res.status(404).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
     try {
         if(!req.params.id) throw new Error("You must provide user id!");
 
@@ -108,11 +108,12 @@ const deleteUser = async (req, res) => {
         else if( e.message === "Doctor not found!" ) {
             return res.status(404).json({ message: e.message });
         }
-        res.status(500).json({ message: e.message });
+
+        next(e);
     }
 };
 
-const getPatientsByDate = async (req, res) => {
+const getPatientsByDate = async (req, res, next) => {
     try {
         if(!req.query.start_date || !req.query.end_date ) throw new Error("You must provide start date and end date!");
 
@@ -134,11 +135,11 @@ const getPatientsByDate = async (req, res) => {
             return res.status(400).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const getStaffsByDate = async (req, res) => {
+const getStaffsByDate = async (req, res, next) => {
     try {
         if(!req.query.date) throw new Error("You must provide a date!");
 
@@ -148,21 +149,21 @@ const getStaffsByDate = async (req, res) => {
 
         res.json(data);
     } catch(e) {
-        res.status(500).json({message: e.message});
+        next(e);
     }
 };
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (req, res, next) => {
     try {
         const users = await userControllers.getAllUsers();
 
         res.json({ users, count: users.length });
     } catch(e) {
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const getUsersByRole = async (req, res) => {
+const getUsersByRole = async (req, res, next) => {
     try {
         if(!req.query.role || typeof req.query.role !== 'string' ) throw new Error("you must provide role (string)!");
 
@@ -174,11 +175,11 @@ const getUsersByRole = async (req, res) => {
             return res.status(400).json({ message: e.message });
         }
 
-        res.status(500).json({ message: e.message });
+        next(e);
     }
 };
 
-const getUsersByNameAndRole = async (req, res) => {
+const getUsersByNameAndRole = async (req, res, next) => {
     try {
         if(!req.query.name || !req.query.role ) throw new Error("you must provide a name and role!");
 
@@ -189,7 +190,8 @@ const getUsersByNameAndRole = async (req, res) => {
         if( e.message === "you must provide a name!" ) {
             return res.status(400).json({ message: e.message });
         }
-        res.status(500).json({ message: e.message });
+
+        next(e);
     }
 };
 

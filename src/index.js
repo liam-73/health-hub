@@ -10,6 +10,9 @@ const userRouter = require('./routes/user');
 const appointmentRouter = require("./routes/appointment");
 const transacitionRouter = require('./routes/transaction');
 
+// error handler
+const { serverErrorHandler } = require("./handlers/error.handler");
+
 const app = express();
 const port = process.env.PORT;
 
@@ -27,10 +30,7 @@ app.use( userRouter );
 app.use( appointmentRouter );
 app.use( transacitionRouter );
 
-app.use( ( error, req, res, next ) => {
-    const status = error.status || 500;
-    res.status(status).json({ message: error.message });
-});
+app.use( serverErrorHandler );
 
 app.listen(port, () => {
     console.log("Server is up on port ", port );
