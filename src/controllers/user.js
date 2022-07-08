@@ -1,20 +1,38 @@
 const userServices = require('../services/user');
 
-const { doctorPropeties } = require("../constants/user.properties");
+const { doctorPropeties, patientProperties } = require("../constants/user.properties");
 
 const addUser = async (request_body, file) => {
     const doctorData = {};
+    const patientData = {};
 
-    for( const key of Object.keys(request_body) ) {
-        if( doctorPropeties.includes(key) ) {
-            doctorData[key] = request_body[key];
+    if(request_body.role === 'doctor') {
 
-            delete request_body[key];
+        for( const key of Object.keys(request_body) ) {
+
+            if( doctorPropeties.includes(key) ) {
+                doctorData[key] = request_body[key];
+    
+                delete request_body[key];
+            }
+
         }
+        request_body.doctor_data = doctorData;
+
+    } else if( request_body.role === 'patient') {
+
+        for( const key of Object.keys(request_body) ) {
+
+            if( patientProperties.includes(key) ) {
+                patientData[key] = request_body[key];
+
+                delete request_body[key];
+            }
+
+        }
+        request_body.patient_data = patientData;
     }
 
-    request_body.doctor_data = doctorData;
-    
     const user = await userServices.addUser( request_body, file );
 
     return user;

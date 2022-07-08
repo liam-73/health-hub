@@ -124,11 +124,14 @@ const deleteAppointment = async (appointment_id) => {
     }
 };
 
-const getAllAppointments = async (hospitalData) => {
+const getAllAppointments = async (hospitalData, limit) => {
     try {
         const hospital = await hospitalData.populate({
             path: 'appointments',
-            options: { sort: { createdAt: -1 } }
+            options: { 
+                sort: { createdAt: -1 },
+                limit: parseInt(limit)
+            }
         });
 
         return hospital.appointments;

@@ -2,13 +2,14 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
     {
-        profile: {
-            type: String
-        },
+        profile: String,
+        name: String,
+        dateOfBirth: String,
+        gender: String,
         
-        name: {
+        role: {
             type: String,
-            required: true,
+            required: true
         },
 
         email: {
@@ -18,32 +19,17 @@ const userSchema = new mongoose.Schema(
         
         address: {
             type: String,
-        },
-        
-        dateOfBirth: {
-            type: String
+            default: ' '
         },
 
-        gender: {
-            type: String
+        patient_data: {
+            diagnosis: String,
         },
         
         doctor_data: {
-            specialization: {
-                type: String,
-            },
-    
-            appointment_fee: {
-                type: Number,
-            },
-    
-            daily_token_numbers: {
-                type: Number
-            },
-        },
-
-        role: {
-            type: String
+            specialization: String,
+            appointment_fee: Number,
+            daily_token_numbers: Number,
         },
 
         hospital: {

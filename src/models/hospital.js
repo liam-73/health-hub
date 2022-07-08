@@ -20,12 +20,6 @@ const hospitalSchema = new mongoose.Schema(
             required: true,
         },
 
-        password: {
-            type: String,
-            trim: true,
-            required: true
-        },
-
         phone_number: {
             type: String,
             trim: true,

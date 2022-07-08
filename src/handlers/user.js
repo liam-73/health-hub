@@ -1,5 +1,9 @@
 // modules
-const { request_validation } = require("./request.handler");
+const {
+    doctor_validation,
+    patient_validation,
+    staff_validation
+} = require("./request.handler");
 
 const moment = require("moment");
 
@@ -8,7 +12,21 @@ const userControllers = require('../controllers/user');
 
 const addUser = async (req, res) => {
     try {
-        const request_body = await request_validation(req.body);
+        let request_body;
+
+        if( req.body.role === 'doctor' ) {
+
+            request_body = await doctor_validation(req.body);
+
+        } else if( req.body.role === 'patient' ) {
+
+            request_body = await patient_validation(req.body);
+        
+        } else {
+
+            request_body = await staff_validation(req.body);
+
+        }
         
         const user = await userControllers.addUser(request_body, req.file);
 
@@ -79,7 +97,7 @@ const deleteUser = async (req, res) => {
     try {
         if(!req.params.id) throw new Error("You must provide user id!");
 
-        const user = await userControllers.deleteUser( req.query.id );
+        const user = await userControllers.deleteUser( req.params.id );
 
         res.json(user);
     } catch(e) {

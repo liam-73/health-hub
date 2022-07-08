@@ -31,8 +31,8 @@ const deleteAppointment = async (appointment_id) => {
     return deletedAppointment;
 };
 
-const getAllAppointments = async (hospital) => {
-    const appointments = await appointmentServices.getAllAppointments( hospital );
+const getAllAppointments = async (hospital, limit) => {
+    const appointments = await appointmentServices.getAllAppointments( hospital, limit );
 
     return appointments;
 };

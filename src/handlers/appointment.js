@@ -5,7 +5,7 @@ const makeAppointment = async (req, res) => {
     try {
         const requested_fields = Object.keys(req.body);
 
-        const valid_fields = ['doctor_id', 'patient_id' ];
+        const valid_fields = ['doctor_id', 'patient_id', 'date' ];
 
         const valid_operation = requested_fields.every( field => valid_fields.includes(field) );
 
@@ -107,7 +107,7 @@ const deleteAppointment = async (req, res) => {
 
 const getAllAppointments = async (req, res) => {
     try {
-        const appointments = await appointmentController.getAllAppointments(req.hospital);
+        const appointments = await appointmentController.getAllAppointments(req.hospital, req.query.limit);
 
         res.json({ appointments, count: appointments.length });
     } catch(e) {

@@ -85,7 +85,11 @@ const deleteUser = async (user_id) => {
 
 const getAllUsers = async () => {
     try {
-        const users = await User.find();
+        const users = await User.aggregate([
+            {
+                $sort: { createdAt: -1 }
+            }
+        ]);
 
         return users;
     } catch(e) {
@@ -95,7 +99,14 @@ const getAllUsers = async () => {
 
 const getUsersByRole = async (role) => {
     try {
-        const users = await User.find({ role });
+        const users = await User.aggregate([
+            {
+                $match: { role }
+            },
+            {
+                $sort: { createdAt: -1 }
+            }
+        ]);
 
         return users;
     } catch(e) {

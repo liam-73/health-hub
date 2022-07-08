@@ -9,10 +9,16 @@ const userProperties = [
     'email',
     'dateOfBirth',
     'address',
+    'gender',
     'role'
 ];
+
+const patientProperties = [
+    'diagnosis'
+]
 
 module.exports = {
     doctorPropeties,
     userProperties,
+    patientProperties,
 };

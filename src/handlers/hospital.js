@@ -1,16 +1,12 @@
 // modules
-const { request_validation } = require("./request.handler");
+const { hospital_validation } = require("./request.handler");
 
 // controllers
 const hospitalControllers = require("../controllers/hospital");
 
 const createHospitalProfile = async (req, res) => {
     try {
-        const request_body = await request_validation(req.body);
-
-        for( item in request_body ) {
-            if( typeof item !== 'string' ) throw new Error("Invalid Input!");
-        }
+        const request_body = await hospital_validation(req.body);
 
         const data = await hospitalControllers.createHospitalProfile(request_body, req.file);
 
@@ -40,13 +36,7 @@ const getProfile = async (req, res) => {
 
 const editProfile = async (req, res) => {
     try {
-        const request_body = await request_validation(req.body);
-
-        for( item in request_body ) {
-            if( typeof item !== 'string' ) throw new Error("Invalid Input!");
-        }
-
-        console.log(req.file);
+        const request_body = await hospital_validation(req.body);
 
         const hospital = await hospitalControllers.editProfile( req.hospital, request_body, req.file );
 
