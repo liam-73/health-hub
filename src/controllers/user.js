@@ -6,7 +6,7 @@ const addUser = async (request_body, file) => {
     const doctorData = {};
     const patientData = {};
 
-    if(request_body.role === 'doctor') {
+    if(request_body.role === 'Doctor') {
 
         for( const key of Object.keys(request_body) ) {
 
@@ -19,7 +19,7 @@ const addUser = async (request_body, file) => {
         }
         request_body.doctor_data = doctorData;
 
-    } else if( request_body.role === 'patient') {
+    } else if( request_body.role === 'Patient') {
 
         for( const key of Object.keys(request_body) ) {
 

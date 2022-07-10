@@ -171,8 +171,8 @@ const getStaffsByDate = async (start_date, end_date) => {
             {
                 $match: {
                     $and: [
-                        { role: { $ne: 'doctor' } },
-                        { role: { $ne: 'patient' } }
+                        { role: { $ne: 'Doctor' } },
+                        { role: { $ne: 'Patient' } }
                     ],
                     createdAt: {
                         $gte: new Date(start_date),

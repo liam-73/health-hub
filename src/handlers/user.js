@@ -14,11 +14,11 @@ const addUser = async (req, res, next) => {
     try {
         let request_body;
 
-        if( req.body.role === 'doctor' ) {
+        if( req.body.role === 'Doctor' ) {
 
             request_body = await doctor_validation(req.body);
 
-        } else if( req.body.role === 'patient' ) {
+        } else if( req.body.role === 'Patient' ) {
 
             request_body = await patient_validation(req.body);
         
