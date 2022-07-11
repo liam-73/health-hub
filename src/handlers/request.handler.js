@@ -8,11 +8,11 @@ const admin_validation = async ( request_body ) => {
         hospital: Joi.string()
     });
 
-    const { value, error } = schema.validate(body);
+    const { value, error } = schema.validate(request_body);
 
     if(error) throw new Error("Invalid Input!");
 
-    const requested_fields = Object.keys(body);
+    const requested_fields = Object.keys(request_body);
 
     const valid_fields = [ 'user_id', 'password', 'hospital' ];
 

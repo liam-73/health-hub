@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
 
-const { request_validation } = require("./request.handler");
+const { admin_validation } = require("./request.handler");
 
 // schema
 const Admin = require("../models/admin");
@@ -23,7 +23,7 @@ const addNewAdmin = async ( req, res, next ) => {
 
 const login = async ( req, res, next ) => {
     try {
-        const body = await request_validation(req.body);
+        const body = await admin_validation(req.body);
         const {user_id, password} = body;
 
         const admin = await adminControllers.login( user_id, password );
