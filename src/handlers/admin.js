@@ -30,14 +30,6 @@ const login = async ( req, res, next ) => {
 
         res.json(admin);
     } catch(e) {
-        if( e.message === "Wrong Password!") {
-            return res.status(400).json({ message: e.message });
-        }
-
-        else if( e.message === "There's no admin with this user id!" ) {
-            return res.status(404).json({ message: e.message });
-        }
-
         next(e);
     }
 };

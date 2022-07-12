@@ -15,14 +15,6 @@ const makeAppointment = async (req, res, next) => {
 
         res.status(201).json(appointment);
     } catch(e) {
-        if( e.message === "Invalid Input" || e.message === "Out of tokens, try again later!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
-        else if( e.message === "Doctor not found!" || e.message === "Patient not found!" ) {
-            return res.status(404).json({ message: e.message });
-        }
-
         next(e);
     }
 };
@@ -35,14 +27,6 @@ const getAppointmentsByDoctorId = async (req, res, next) => {
 
         res.json({ appointments, count: appointments.length });
     } catch(e) {
-        if( e.message === "Doctor not found!" ) {
-            return res.status(404).json({ message: e.message });
-        }
-
-        else if( e.message === "you must provide doctor id!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
         next(e);
     }
 };
@@ -52,11 +36,7 @@ const getAppointmentsByDate = async (req, res, next) => {
         const appointments = await appointmentController.getAppointmentsByDate( req.query.start_date, req.query.end_date );
 
         res.json({ appointments, count: appointments.length });
-    } catch(e) {
-        if( e.message === "Doctor not found!" ) {
-            return res.status(404).json({ message: e.message });
-        }
-    
+    } catch(e) {   
         next(e);
     }
 };
@@ -77,10 +57,6 @@ const editAppointment = async (req, res, next) => {
 
         res.json(appointment);
     } catch(e) {
-        if( e.message === "You must provide appointment id!" || e.message || "Invalid Input" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
         next(e);
     }
 };
@@ -93,14 +69,6 @@ const deleteAppointment = async (req, res, next) => {
 
         res.json(deletedAppointment);
     } catch(e) {
-        if( e.message === "You must provide appointment id!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-        
-        else if( e.message === "Appointment not found!") {
-            return res.status(404).json({ message: e.message });
-        }
-
         next(e);
     }
 };

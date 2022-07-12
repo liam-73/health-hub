@@ -13,14 +13,6 @@ const createHospitalProfile = async (req, res, next) => {
         return res.status(201).json({ hospital: data.hospital, token: data.token });
         
     } catch(e) {
-        if( e.message === "Invalid Input!" || e.message === "Fieldname must be profile" || e.message === "Invalid Email!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
-        else if ( e.message === "This email is already used!" ) {
-            return res.status(409).json({ message: e.message });
-        }
-
         next(e);
     }
 };
@@ -41,10 +33,6 @@ const editProfile = async (req, res, next) => {
 
         res.json(hospital);
     } catch(e) {
-        if( e.message === "Invalid Input!" || e.message === "Invalid Email!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
         next(e);
     }
 };

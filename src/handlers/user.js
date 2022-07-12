@@ -13,6 +13,11 @@ const userControllers = require('../controllers/user');
 const addUser = async (req, res, next) => {
     try {
         let request_body;
+        const role = req.body.role;
+
+        if( role.charAt(0) !== role.charAt(0).toUpperCase() ) {
+            req.body.role = role.charAt(0).toUpperCase() + role.slice(1);
+        }
 
         if( req.body.role === 'Doctor' ) {
 
@@ -32,17 +37,6 @@ const addUser = async (req, res, next) => {
 
         return res.status(201).json(user);
     } catch(e) {
-        if( e.message === "Invalid Input!" ||
-            e.message === "Invalid Email!" || 
-            e.message === "Unexpected field"
-        ) {
-            return res.status(400).json({ message: e.message });
-        }
-
-        else if ( e.message === "This email is already used!" ) {
-            return res.status(409).json({ message: e.message });
-        }
-
         next(e);
     }
 };
@@ -55,14 +49,6 @@ const getUserById = async (req, res, next) => {
 
         res.json(user);
     } catch(e) {
-        if( e.message === "Patient not found!" ) {
-            return res.status(404).json({ message: e.message });
-        }
-
-        else if( e.message === "You must provide user id!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
         next(e);
     }
 };
@@ -71,25 +57,27 @@ const editUser = async (req, res, next) => {
     try {
         if(!req.params.id) throw new Error('You must provide user id!');
 
-        const request_body = await request_validation(req.body);
+        let request_body;
+
+        if( req.body.role === 'Doctor' ) {
+
+            request_body = await doctor_validation(req.body);
+
+        } else if( req.body.role === 'Patient' ) {
+
+            request_body = await patient_validation(req.body);
+        
+        } else {
+
+            request_body = await staff_validation(req.body);
+
+        }
 
         const user = await userControllers.editUser( request_body, req.params.id, req.file );
 
         return res.json(user);
     } catch(e) {
-        if( e.message === "Invalid Input!" ||
-            e.message === "Invalid Email!" || 
-            e.message === "Unexpected field" ||
-            e.message === "You must provide patient id!"
-        ) {
-            return res.status(400).json({ message: e.message });
-        }
-
-        else if( e.message === "Patient not found!" ) {
-            return res.status(404).json({ message: e.message });
-        }
-
-        next(e);
+       next(e);
     }
 };
 
@@ -101,14 +89,6 @@ const deleteUser = async (req, res, next) => {
 
         res.json(user);
     } catch(e) {
-        if( e.message === "You must provide doctor id in query!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
-        else if( e.message === "Doctor not found!" ) {
-            return res.status(404).json({ message: e.message });
-        }
-
         next(e);
     }
 };
@@ -131,10 +111,6 @@ const getPatientsByDate = async (req, res, next) => {
 
         res.json(data);
     } catch(e) {
-        if( e.message === "You must provide start date and end date!" || e.message === "You must only provide 7 days!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
         next(e);
     }
 };
@@ -165,16 +141,12 @@ const getAllUsers = async (req, res, next) => {
 
 const getUsersByRole = async (req, res, next) => {
     try {
-        if(!req.query.role || typeof req.query.role !== 'string' ) throw new Error("you must provide role (string)!");
+        if(!req.query.role || typeof req.query.role !== 'string' ) throw new Error("you must provide role!");
 
         const  users = await userControllers.getUsersByRole(req.query.role);
 
         res.json({ users });
     } catch(e) {
-        if( e.message === "you must provide role (string)!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
         next(e);
     }
 };
@@ -187,11 +159,7 @@ const getUsersByNameAndRole = async (req, res, next) => {
 
         res.json({ users });
     } catch(e) {
-        if( e.message === "you must provide a name!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
-        next(e);
+       next(e);
     }
 };
 

@@ -8,11 +8,7 @@ const getTransactionsByDate = async (req, res, next) => {
         const transacitions = await transactionControllers.getTransactionsByDate(req.query.start_date, req.query.end_date);
 
         res.json({ transacitions });
-    } catch(e) {
-        if( e.message === "You must provide start date and end date!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-        
+    } catch(e) {       
         next(e);
     }
 };
@@ -34,11 +30,7 @@ const getTransactionsOfDoctor = async (req, res, next) => {
         const transaction = await transactionControllers.getTransactionsOfDoctor( req.query.doctor_id );
 
         res.json(transaction);
-    } catch(e) { 
-        if( e.message === "You must provide doctor id!" ) {
-            return res.status(400).json({ message: e.message });
-        }
-
+    } catch(e) {
         next(e);
     }
 }
