@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const Sentry = require("@sentry/node");
+const Tracing = require("@sentry/tracing");
 
 // routers
 const hospitalRouter = require("../src/routes/hospital");
@@ -31,6 +33,20 @@ app.use( appointmentRouter );
 app.use( transacitionRouter );
 
 app.use( serverErrorHandler );
+
+// sentry
+Sentry.init({
+    dsn: process.env.SENTRY,
+    integrations: [
+        new Sentry.Integrations.Http({ tracing: true }),
+        new Tracing.Integrations.Express({ app }),
+    ],
+    tracesSampleRate: 1.0,
+});
+
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
+app.use(Sentry.Handlers.errorHandler());
 
 app.listen(port, () => {
     console.log("Server is up on port ", port );
