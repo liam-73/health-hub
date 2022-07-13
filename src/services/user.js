@@ -2,6 +2,7 @@ const R = require('ramda');
 
 // modules
 const { photoUpload } = require("../modules/photo");
+const { getDatesInRange } = require("../modules/dates");
 
 // schema
 const User = require("../models/user");
@@ -116,11 +117,14 @@ const getUsersByRole = async (role) => {
 
 const getPatientsByDate = async (start_date, end_date) => {
     try {
-        const days = [ 'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT' ];
+        // const days = [ 'SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT' ];
+
+        const dates = getDatesInRange(start_date, end_date);
 
         const data = await User.aggregate([
             {
                 $match: {
+                    role: "Patient",
                     createdAt: {
                         $gte: new Date(start_date),
                         $lte: new Date(end_date)
@@ -132,7 +136,7 @@ const getPatientsByDate = async (start_date, end_date) => {
                     _id: 0,
                     date: {
                         $dateToString: {
-                            format: '%Y-%m-%d',
+                            format: '%m-%d-%Y',
                             date: '$createdAt'
                         }
                     }
@@ -146,17 +150,10 @@ const getPatientsByDate = async (start_date, end_date) => {
             }
         ]);
 
-        const dateToDay = (date) => {
-            const d = new Date(date).getDay();
-            
-            return days[d]
-        };
-
         const result = R.compose(
-            R.mergeRight( R.zipObj( days, new Array(7).fill(0) ) ),
+            R.mergeRight( R.zipObj( dates, new Array(7).fill(0) ) ),
             R.mergeAll,
             R.map( ({ _id, count }) => ({ [_id]: count }) ),
-            R.map( R.evolve({ _id: dateToDay }) )
         );
 
         return result(data);
@@ -170,10 +167,7 @@ const getStaffsByDate = async (start_date, end_date) => {
         const data = await User.aggregate([
             {
                 $match: {
-                    $and: [
-                        { role: { $ne: 'Doctor' } },
-                        { role: { $ne: 'Patient' } }
-                    ],
+                    role: { $ne: 'Patient' },
                     createdAt: {
                         $gte: new Date(start_date),
                         $lte: new Date(end_date)
@@ -183,18 +177,18 @@ const getStaffsByDate = async (start_date, end_date) => {
             {
                 $project: {
                     _id: 0,
-                    date: {
-                        $dateToString: {
-                            format: '%Y-%m-%d',
-                            date: '$createdAt'
-                        }
-                    }
+                    role: 1
                 }
             },
             {
                 $group: {
-                    _id: "$date",
+                    _id: "$role",
                     count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: {
+                    _id: 1
                 }
             }
         ]);
