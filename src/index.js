@@ -46,7 +46,14 @@ Sentry.init({
 
 app.use(Sentry.Handlers.requestHandler());
 app.use(Sentry.Handlers.tracingHandler());
-app.use(Sentry.Handlers.errorHandler());
+app.use(Sentry.Handlers.errorHandler({
+    shouldHandleError(error) {
+        if (error.status === 400 || error.status === 500) {
+          return true;
+        }
+        return false;
+      },
+}));
 
 app.listen(port, () => {
     console.log("Server is up on port ", port );
