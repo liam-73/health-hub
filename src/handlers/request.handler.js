@@ -32,7 +32,7 @@ const doctor_validation = async ( request_body ) => {
         address: Joi.string(),
         dateOfBirth: Joi.string(),
         gender: Joi.string(),
-        specialization: Joi.string(),
+        degree: Joi.string(),
         appointment_fee: Joi.number(),
         daily_token_numbers: Joi.number(),
     });
@@ -43,7 +43,7 @@ const doctor_validation = async ( request_body ) => {
 
     const requested_fields = Object.keys( request_body );
 
-    const valid_fields = [ 'profile', 'name', 'email', 'address', 'dateOfBirth', 'gender', 'specialization', 'appointment_fee', 'daily_token_numbers', 'hospital', 'role' ];
+    const valid_fields = [ 'profile', 'name', 'email', 'address', 'dateOfBirth', 'gender', 'degree', 'appointment_fee', 'daily_token_numbers', 'hospital', 'role' ];
 
     const validOperation = requested_fields.every( field => valid_fields.includes(field) );
 
@@ -99,6 +99,7 @@ const staff_validation = async (request_body) => {
         address: Joi.string(),
         dateOfBirth: Joi.string(),
         gender: Joi.string(),
+        degree: Joi.string(),
         role: Joi.string()
     });
 
@@ -108,7 +109,7 @@ const staff_validation = async (request_body) => {
 
     const requested_fields = Object.keys( request_body );
 
-    const valid_fields = [ 'profile', 'name', 'email', 'address', 'dateOfBirth', 'gender', 'role', 'hospital' ];
+    const valid_fields = [ 'profile', 'name', 'email', 'address', 'dateOfBirth', 'gender', 'role', 'degree', 'hospital' ];
 
     const validOperation = requested_fields.every( field => valid_fields.includes(field) );
 

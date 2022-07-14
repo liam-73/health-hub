@@ -3,15 +3,18 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema(
     {
         profile: String,
+
         name: String,
+
         dateOfBirth: String,
+
         gender: String,
         
         role: {
             type: String,
             required: true
         },
-
+        
         email: {
             type: String,
             trim: true
@@ -21,16 +24,14 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: ' '
         },
-
-        patient_data: {
-            diagnosis: String,
-        },
         
-        doctor_data: {
-            specialization: String,
-            appointment_fee: Number,
-            daily_token_numbers: Number,
-        },
+        diagnosis: String,
+
+        degree: String,
+
+        appointment_fee: Number,
+
+        daily_token_numbers: Number,
 
         hospital: {
             type: mongoose.Schema.Types.ObjectId,

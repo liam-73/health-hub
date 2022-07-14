@@ -20,7 +20,6 @@ const addUser = async (req, res, next) => {
         }
 
         if( req.body.role === 'Doctor' ) {
-
             request_body = await doctor_validation(req.body);
 
         } else if( req.body.role === 'Patient' ) {

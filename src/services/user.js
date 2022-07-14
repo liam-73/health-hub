@@ -56,10 +56,6 @@ const editUser = async (request_body, user_id, file) => {
             user.profile = profile;
         }
 
-        if(request_body.doctor_data) {
-            user.doctor_data = R.mergeRight(user.doctor_data, request_body.doctor_data);
-        }
-
         edits.forEach( edit => user[edit] = request_body[edit] );
 
         await user.save();
@@ -121,13 +117,17 @@ const getPatientsByDate = async (start_date, end_date) => {
 
         const dates = getDatesInRange(start_date, end_date);
 
+        start_date = new Date(start_date);
+        end_date = new Date(end_date);
+        end_date.setHours(23, 59);
+
         const data = await User.aggregate([
             {
                 $match: {
                     role: "Patient",
                     createdAt: {
-                        $gte: new Date(start_date),
-                        $lte: new Date(end_date)
+                        $gt: start_date,
+                        $lt: end_date
                     }
                 }
             },
