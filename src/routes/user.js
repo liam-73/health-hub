@@ -46,4 +46,8 @@ router.get( "/search_users", auth, userHandlers.getUsersByNameAndRole );
 
 router.get( "/search_staffs", auth, userHandlers.getStaffsByName );
 
+router.get( "/doctor_by_email", auth, userHandlers.getDoctorByEmail );
+
+router.get( "/patient_by_email", auth, userHandlers.getPatientByEmail );
+
 module.exports = router;

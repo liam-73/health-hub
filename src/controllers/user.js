@@ -66,7 +66,19 @@ const getStaffsByName = async (name) => {
     const data = await userServices.getStaffsByName(name);
 
     return data;
-}
+};
+
+const getDoctorByEmail = async (email) => {
+    const data = await userServices.getDoctorByEmail(email);
+
+    return data;
+};
+
+const getPatientByEmail = async (email) => {
+    const data = await userServices.getPatientByEmail(email);
+
+    return data;
+};
 
 module.exports = {
     addUser,
@@ -80,4 +92,6 @@ module.exports = {
     getUsersByNameAndRole,
     getStaffsByName,
     getAllEmployees,
+    getDoctorByEmail,
+    getPatientByEmail,
 }

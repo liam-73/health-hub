@@ -275,6 +275,30 @@ const getStaffsByName = async (name) => {
     }
 };
 
+const getDoctorByEmail = async (email) => {
+    try {
+        const doctor = await User.findOne({ email });
+
+        if(!doctor || doctor.role !== "Doctor" ) throw new Error("Doctor not found!");
+
+        return doctor;
+    } catch(e) {
+        throw (e);
+    }
+};
+
+const getPatientByEmail = async (email) => {
+    try {
+        const patient = await User.findOne({ email });
+
+        if(!patient || patient.role !== "Patient" ) throw new Error("Patient not found!");
+
+        return patient;
+    } catch(e) {
+        throw (e);
+    }
+};
+
 module.exports = {
     addUser,
     getUserById,
@@ -287,4 +311,6 @@ module.exports = {
     getUsersByNameAndRole,
     getStaffsByName,
     getAllEmployees,
+    getDoctorByEmail,
+    getPatientByEmail,
 };

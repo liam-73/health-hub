@@ -5,7 +5,7 @@ const makeAppointment = async (req, res, next) => {
     try {
         const requested_fields = Object.keys(req.body);
 
-        const valid_fields = ['doctor_id', 'patient_id', 'date' ];
+        const valid_fields = ['doctor', 'patient', 'date' ];
 
         const valid_operation = requested_fields.every( field => valid_fields.includes(field) );
 
@@ -47,7 +47,7 @@ const editAppointment = async (req, res, next) => {
 
         const requested_fields = Object.keys(req.body);
 
-        const valid_fields = ['patient_id', 'doctor_id', 'fee', 'date' ];
+        const valid_fields = ['patient', 'doctor', 'fee', 'date' ];
 
         const valid_operation = requested_fields.every( field => valid_fields.includes(field) );
 

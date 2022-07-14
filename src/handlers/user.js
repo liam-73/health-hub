@@ -186,6 +186,34 @@ const getStaffsByName = async (req, res, next) => {
     }
 };
 
+const getDoctorByEmail = async (req, res, next) => {
+    try {
+        const email = req.query.email;
+
+        if(!email || typeof email !== 'string') throw new Error("You must provide a email(string)!");
+
+        const user = await userControllers.getDoctorByEmail(email);
+
+        res.json(user);
+    } catch(e) {
+        next(e);
+    }
+};
+
+const getPatientByEmail = async (req, res, next) => {
+    try {
+        const email = req.query.email;
+
+        if(!email || typeof email !== 'string') throw new Error("You must provide a email(string)!");
+
+        const user = await userControllers.getPatientByEmail(email);
+
+        res.json(user);
+    } catch(e) {
+        next(e);
+    }
+};
+
 module.exports = {
     addUser,
     getUserById,
@@ -198,4 +226,6 @@ module.exports = {
     getUsersByNameAndRole,
     getStaffsByName,
     getAllEmployees,
+    getDoctorByEmail,
+    getPatientByEmail,
 };
