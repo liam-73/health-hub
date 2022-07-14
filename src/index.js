@@ -13,7 +13,7 @@ const appointmentRouter = require("./routes/appointment");
 const transacitionRouter = require('./routes/transaction');
 
 // error handler
-const { serverErrorHandler } = require("./handlers/error.handler");
+const { allErrorHandler } = require("./handlers/error.handler");
 
 const app = express();
 const port = process.env.PORT;
@@ -26,13 +26,13 @@ app.use( bodyParser.urlencoded({ extended: true }) );
 
 app.use( cors() );
 
+app.use(Sentry.Handlers.requestHandler());
+
 app.use( "/hospital", hospitalRouter );
 app.use( adminRouter );
 app.use( userRouter );
 app.use( appointmentRouter );
 app.use( transacitionRouter );
-
-app.use( serverErrorHandler );
 
 // sentry
 Sentry.init({
@@ -44,9 +44,11 @@ Sentry.init({
     tracesSampleRate: 1.0,
 });
 
-app.use(Sentry.Handlers.requestHandler());
 app.use(Sentry.Handlers.tracingHandler());
-app.use(Sentry.Handlers.errorHandler());
+app.use(Sentry.Handlers.errorHandler(
+));
+
+app.use( allErrorHandler );
 
 app.listen(port, () => {
     console.log("Server is up on port ", port );
