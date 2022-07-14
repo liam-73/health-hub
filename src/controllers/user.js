@@ -32,6 +32,12 @@ const getAllUsers = async () => {
     return users;
 };
 
+const getAllEmployees = async () => {
+    const users = await userServices.getAllEmployees();
+
+    return users;
+}
+
 const getUsersByRole = async (role) => {
     const users = await userServices.getUsersByRole(role);
 
@@ -56,6 +62,12 @@ const getUsersByNameAndRole = async (name, role) => {
     return data;
 };
 
+const getStaffsByName = async (name) => {
+    const data = await userServices.getStaffsByName(name);
+
+    return data;
+}
+
 module.exports = {
     addUser,
     getUserById,
@@ -66,4 +78,6 @@ module.exports = {
     getPatientsByDate,
     getStaffsByDate,
     getUsersByNameAndRole,
+    getStaffsByName,
+    getAllEmployees,
 }

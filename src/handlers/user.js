@@ -138,9 +138,19 @@ const getAllUsers = async (req, res, next) => {
     }
 };
 
+const getAllEmployees = async (req, res, next) => {
+    try {
+        const users = await userControllers.getAllEmployees();
+
+        res.json({ users });
+    } catch(e) {
+        next(e);
+    }
+};
+
 const getUsersByRole = async (req, res, next) => {
     try {
-        if(!req.query.role || typeof req.query.role !== 'string' ) throw new Error("you must provide role!");
+        if(!req.query.role || typeof req.query.role !== 'string' ) throw new Error("You must provide role(string)!");
 
         const  users = await userControllers.getUsersByRole(req.query.role);
 
@@ -152,13 +162,27 @@ const getUsersByRole = async (req, res, next) => {
 
 const getUsersByNameAndRole = async (req, res, next) => {
     try {
-        if(!req.query.name || !req.query.role ) throw new Error("you must provide a name and role!");
+        if(!req.query.name || !req.query.role ) throw new Error("You must provide a name and role!");
 
         const users = await userControllers.getUsersByNameAndRole(req.query.name, req.query.role);
 
         res.json({ users });
     } catch(e) {
        next(e);
+    }
+};
+
+const getStaffsByName = async (req, res, next) => {
+    try{
+        const name = req.query.name;
+
+        if(!name || typeof name !== 'string') throw new Error("You must provide a name(string)!");
+
+        const users = await userControllers.getStaffsByName(name);
+
+        res.json({ users });
+    } catch(e) {
+        next(e);
     }
 };
 
@@ -172,4 +196,6 @@ module.exports = {
     getPatientsByDate,
     getStaffsByDate,
     getUsersByNameAndRole,
+    getStaffsByName,
+    getAllEmployees,
 };

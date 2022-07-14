@@ -94,6 +94,25 @@ const getAllUsers = async () => {
     }
 };
 
+const getAllEmployees = async () => {
+    try {
+        const users = await User.aggregate([
+            {
+                $match: {
+                    role: { $ne: "Patient" }
+                }
+            },
+            {
+                $sort: { createdAt: -1 }
+            }
+        ]);
+        
+        return users;
+    } catch(e) {
+        throw(e);
+    }
+};
+
 const getUsersByRole = async (role) => {
     try {
         const users = await User.aggregate([
@@ -206,14 +225,22 @@ const getStaffsByDate = async (start_date, end_date) => {
 
 const getUsersByNameAndRole = async (name, role) => {
     try {
+        if( name.indexOf("\\") > -1 ) return [];
+
         const users = await User.aggregate([
             {
-                $match: { 
-                    name: {
-                        $regex: name,
-                        $options: 'ix'
-                    },
-                    role
+                $match: {
+                    $and: [
+                        {
+                            name: {
+                                $regex: name,
+                                $options: 'i'
+                            }
+                        },
+                        {
+                            role
+                        }
+                    ]
                 }
             }
         ]);
@@ -221,6 +248,30 @@ const getUsersByNameAndRole = async (name, role) => {
         return users;
     } catch(e) {
         throw (e);
+    }
+};
+
+const getStaffsByName = async (name) => {
+    try {
+        if( name.indexOf("\\") > -1 ) return [];
+
+        let users = await User.aggregate([
+            {
+                $match: {
+                    name: {
+                        $regex: name,
+                        $options: 'i'
+                    },
+                    role: { $ne: "Patient"}
+                }
+            }
+        ]);
+
+        users = users.filter( user => user.role !== "Patient" );
+
+        return users;
+    } catch(e) {
+        throw(e);
     }
 };
 
@@ -234,4 +285,6 @@ module.exports = {
     getPatientsByDate,
     getStaffsByDate,
     getUsersByNameAndRole,
+    getStaffsByName,
+    getAllEmployees,
 };

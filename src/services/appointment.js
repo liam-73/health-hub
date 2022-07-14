@@ -9,7 +9,7 @@ const makeAppointment = async ( request_body, hospital ) => {
     try {
         const doctor = await User.findById(request_body.doctor_id);
 
-        if(!doctor || doctor.role !== 'doctor') throw new Error("Doctor not found!");
+        if(!doctor || doctor.role !== 'Doctor') throw new Error("Doctor not found!");
 
         const appointments = await Appointment.aggregate([
             {
@@ -27,7 +27,7 @@ const makeAppointment = async ( request_body, hospital ) => {
         else {
             const patient = await User.findById(request_body.patient_id);
     
-            if(!patient || patient.role !== 'patient') throw new Error("Patient not found!");
+            if(!patient || patient.role !== 'Patient') throw new Error("Patient not found!");
     
             const appointment = await new Appointment({
                 doctor_id: doctor._id,

@@ -34,6 +34,8 @@ router.delete( "/users/:id", auth, userHandlers.deleteUser );
 
 router.get( "/all_users", auth, userHandlers.getAllUsers );
 
+router.get( "/all_employees", auth, userHandlers.getAllEmployees );
+
 router.get( "/get_users_by_role", auth, userHandlers.getUsersByRole );
 
 router.get( "/get_patient_rate", auth, userHandlers.getPatientsByDate );
@@ -41,5 +43,7 @@ router.get( "/get_patient_rate", auth, userHandlers.getPatientsByDate );
 router.get( "/get_staff_rate", auth, userHandlers.getStaffsByDate );
 
 router.get( "/search_users", auth, userHandlers.getUsersByNameAndRole );
+
+router.get( "/search_staffs", auth, userHandlers.getStaffsByName );
 
 module.exports = router;
