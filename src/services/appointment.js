@@ -129,7 +129,8 @@ const getAllAppointments = async (hospitalData, limit) => {
         const appointments = await Appointment.find({ hospital: hospitalData._id })
             .populate('doctor')
             .populate('patient')
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .limit(limit);
 
         return appointments;
     } catch(e) {
