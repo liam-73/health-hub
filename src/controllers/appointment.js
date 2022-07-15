@@ -37,11 +37,18 @@ const getAllAppointments = async (hospital, limit) => {
     return appointments;
 };
 
+const getTodayTotalAppointmentsCount = async () => {
+    const data = await appointmentServices.getTodayTotalAppointmentsCount();
+
+    return data;
+}
+
 module.exports = {
     makeAppointment,
     getAppointmentsByDoctorId,
     getAppointmentsByDate,
     editAppointment,
     deleteAppointment,
-    getAllAppointments
+    getAllAppointments,
+    getTodayTotalAppointmentsCount,
 };

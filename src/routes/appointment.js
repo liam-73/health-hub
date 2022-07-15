@@ -22,4 +22,6 @@ router.delete( '/appointments/:id', auth, appointmentHandlers.deleteAppointment 
 
 router.get( '/all_appointments', auth, appointmentHandlers.getAllAppointments );
 
+router.get( "/today_appointments", auth, appointmentHandlers.getTodayTotalAppointmentsCount );
+
 module.exports = router; 

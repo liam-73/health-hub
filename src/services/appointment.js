@@ -25,7 +25,6 @@ const makeAppointment = async ( request_body, hospital ) => {
         }
 
         else {
-            console.log(hospital);
             const patient = await User.findById(request_body.patient);
     
             if(!patient || patient.role !== 'Patient') throw new Error("Patient not found!");
@@ -136,6 +135,34 @@ const getAllAppointments = async (hospitalData, limit) => {
     } catch(e) {
         throw (e);
     }
+};
+
+const getTodayTotalAppointmentsCount = async (req, res) => {
+    try {
+        const data = await Appointment.aggregate([
+            {
+                $match: {
+                    date: moment().format("MM-DD-YYYY")
+                }
+            },
+            {
+                $group: {
+                    _id: "$date",
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    count: 1
+                }
+            }
+        ]);
+
+        return data[0];
+    } catch(e) {
+        throw(e);
+    }
 }
 
 module.exports = {
@@ -145,4 +172,5 @@ module.exports = {
     editAppointment,
     deleteAppointment,
     getAllAppointments,
+    getTodayTotalAppointmentsCount,
 };

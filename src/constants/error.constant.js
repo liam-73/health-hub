@@ -8,8 +8,10 @@ const badRequests = [
     "Out of tokens, try again later!",
     "You must provide start date and end date!",
     "You must provide a name and role!",
-    "you must provide role!",
-    "You must only provide 7 days!"
+    "You must provide a name(string)!",
+    "You must provide role(string)!",
+    "You must only provide 7 days!",
+    "You must provide a email(string)!"
 ];
 
 const notFoundErrors = [

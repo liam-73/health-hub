@@ -83,11 +83,22 @@ const getAllAppointments = async (req, res, next) => {
     }
 };
 
+const getTodayTotalAppointmentsCount = async (req, res, next) => {
+    try {
+        const data = await appointmentController.getTodayTotalAppointmentsCount();
+
+        res.json(data);
+    } catch(e) {
+        next(e);
+    }
+};
+
 module.exports = {
     makeAppointment,
     getAppointmentsByDoctorId,
     getAppointmentsByDate,
     editAppointment,
     deleteAppointment,
-    getAllAppointments
+    getAllAppointments,
+    getTodayTotalAppointmentsCount,
 };
