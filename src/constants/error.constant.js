@@ -15,7 +15,7 @@ const badRequests = [
 ];
 
 const notFoundErrors = [
-    "There's no admin with this user id!",
+    "There's no admin with this email!",
     "Doctor not found!",
     "Patient not found!",
     "Appointment not found!",

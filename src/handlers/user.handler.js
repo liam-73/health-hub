@@ -10,7 +10,7 @@ const addUser = async (req, res, next) => {
   const schema = Joi.object({
     profile: Joi.string(),
     name: Joi.string(),
-    email: Joi.string().required(),
+    email: Joi.string().email().required(),
     gender: Joi.string(),
     dateOfBirth: Joi.string(),
     address: Joi.string(),
@@ -167,7 +167,7 @@ const getUsers = async (req, res, next) => {
     search: Joi.string(),
     user_type: Joi.string().valid(...USER_TYPES),
     is_all_employees: Joi.boolean().default(false),
-    email: Joi.string(),
+    email: Joi.string().email(),
   });
 
   const { value, error } = schema.validate(req.query);

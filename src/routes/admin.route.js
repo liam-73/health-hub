@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 // handlers
-const adminHandlers = require("../handlers/admin");
+const adminHandlers = require("../handlers/admin.handler");
 
 // authenticaion
 const auth =  require("../authentication/auth");
