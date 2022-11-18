@@ -23,10 +23,7 @@ const createAppointment = async (req, res, next) => {
   }
 
   try {
-    const appointment = await appointmentController.createAppointment({
-      ...value,
-      hospital: req.hospital,
-    });
+    const appointment = await appointmentController.createAppointment(value);
 
     res.status(201).json(appointment);
   } catch (e) {
@@ -57,10 +54,7 @@ const getAppointments = async (req, res, next) => {
   }
 
   try {
-    const appointments = await appointmentController.getAppointments({
-      ...value,
-      hospital: req.hospital,
-    });
+    const appointments = await appointmentController.getAppointments(value);
 
     res.json({ appointments, count: appointments.length });
   } catch (e) {

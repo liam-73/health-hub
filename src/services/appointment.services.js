@@ -1,11 +1,11 @@
 const moment = require('moment');
 
 // schemas
-const AppointmentModel = require('../models/appointment');
-const Transacition = require('../models/transaction');
-const UserModel = require('../models/user');
+const AppointmentModel = require('../models/appointment.model');
+const TransactionModel = require('../models/transaction.model');
+const UserModel = require('../models/user.model');
 
-const createAppointment = async ({ doctor, patient, date, hospital }) => {
+const createAppointment = async ({ doctor, patient, date }) => {
   try {
     const doctorData = await UserModel.findById(doctor);
 
@@ -34,14 +34,12 @@ const createAppointment = async ({ doctor, patient, date, hospital }) => {
         patient,
         fee: doctorData.appointment_fee,
         date: date ? date : moment().format('MM-DD-YYYY'),
-        hospital: hospital._id,
       });
 
-      await Transacition.create({
+      await TransactionModel.create({
         doctor_id: doctor,
         patient_id: patient,
         amount: doctorData.appointment_fee,
-        hospital: hospital._id,
       });
 
       return appointment;
@@ -60,7 +58,6 @@ const getAppointments = async (query) => {
     end_date,
     doctor_id,
     is_today_appts,
-    hospital,
   } = query;
 
   let filter = {};
@@ -70,12 +67,10 @@ const getAppointments = async (query) => {
       $gte: new Date(start_date),
       $lte: new Date(end_date),
     };
-    filter.hospital = hospital._id;
   }
 
   if (is_today_appts) {
     filter.date = moment().format('MM-DD-YYYY');
-    filter.hospital = hospital._id;
     limit = 0;
   }
 

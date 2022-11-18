@@ -28,11 +28,11 @@ const addUser = async (req, res, next) => {
     }),
     appointment_fee: Joi.number().when('user_type', {
       is: 'DOCTOR',
-      then: Joi.string().required(),
+      then: Joi.number().required(),
     }),
     daily_token_numbers: Joi.number().when('user_type', {
       is: 'DOCTOR',
-      then: Joi.string().required(),
+      then: Joi.number().required(),
     }),
   });
 
@@ -56,6 +56,37 @@ const addUser = async (req, res, next) => {
   }
 };
 
+const getUsers = async (req, res, next) => {
+  const schema = Joi.object({
+    skip: Joi.number().integer().default(0),
+    limit: Joi.number().integer().default(10),
+    sort: Joi.any().default('-createdAt'),
+    search: Joi.string(),
+    user_type: Joi.string().valid(...USER_TYPES),
+    is_all_employees: Joi.boolean().default(false),
+    email: Joi.string().email(),
+  });
+
+  const { value, error } = schema.validate(req.query);
+
+  if (error) {
+    return res.status(400).send({
+      error: {
+        code: 400,
+        message: error.details[0].message,
+      },
+    });
+  }
+
+  try {
+    const users = await userControllers.getUsers(value);
+
+    res.json({ users, count: users.length });
+  } catch (e) {
+    next(e);
+  }
+};
+
 const getUserById = async (req, res, next) => {
   const schema = Joi.object({
     id: Joi.objectid().required(),
@@ -74,44 +105,6 @@ const getUserById = async (req, res, next) => {
 
   try {
     const user = await userControllers.getUserById(value.id);
-
-    res.json(user);
-  } catch (e) {
-    next(e);
-  }
-};
-
-const editUser = async (req, res, next) => {
-  try {
-    if (!req.params.id) throw new Error('You must provide user id!');
-
-    let request_body;
-
-    if (req.body.role === 'Doctor') {
-      request_body = await doctor_validation(req.body);
-    } else if (req.body.role === 'Patient') {
-      request_body = await patient_validation(req.body);
-    } else {
-      request_body = await staff_validation(req.body);
-    }
-
-    const user = await userControllers.editUser(
-      request_body,
-      req.params.id,
-      req.file,
-    );
-
-    return res.json(user);
-  } catch (e) {
-    next(e);
-  }
-};
-
-const deleteUser = async (req, res, next) => {
-  try {
-    if (!req.params.id) throw new Error('You must provide user id!');
-
-    const user = await userControllers.deleteUser(req.params.id);
 
     res.json(user);
   } catch (e) {
@@ -160,18 +153,25 @@ const getUsersByDate = async (req, res, next) => {
   }
 };
 
-const getUsers = async (req, res, next) => {
+const editUser = async (req, res, next) => {
   const schema = Joi.object({
-    skip: Joi.number().integer().default(0),
-    limit: Joi.number().integer().default(10),
-    sort: Joi.any().default('-createdAt'),
-    search: Joi.string(),
-    user_type: Joi.string().valid(...USER_TYPES),
-    is_all_employees: Joi.boolean().default(false),
-    email: Joi.string().email(),
+    params: { id: Joi.objectid().required() },
+    body: {
+      profile: Joi.string(),
+      name: Joi.string(),
+      email: Joi.string().email(),
+      gender: Joi.string(),
+      dateOfBirth: Joi.string(),
+      address: Joi.string(),
+      degree: Joi.string(),
+      appointment_fee: Joi.number(),
+      daily_token_numbers: Joi.number(),
+    },
   });
 
-  const { value, error } = schema.validate(req.query);
+  const { value, error } = schema.validate(req);
+
+  console.log(error);
 
   if (error) {
     return res.status(400).send({
@@ -183,9 +183,38 @@ const getUsers = async (req, res, next) => {
   }
 
   try {
-    const users = await userControllers.getUsers(value);
+    const user = await userControllers.editUser({
+      userId: value.params.id,
+      userData: value.body,
+      avatarData: req.file,
+    });
 
-    res.json({ users, count: users.length });
+    return res.json(user);
+  } catch (e) {
+    next(e);
+  }
+};
+
+const deleteUser = async (req, res, next) => {
+  const schema = Joi.object({
+    id: Joi.objectid().required(),
+  });
+
+  const { value, error } = schema.validate(req.params);
+
+  if (error) {
+    return res.status(400).send({
+      error: {
+        code: 400,
+        message: error.details[0].message,
+      },
+    });
+  }
+
+  try {
+    const user = await userControllers.deleteUser(value.id);
+
+    res.json(user);
   } catch (e) {
     next(e);
   }
@@ -193,9 +222,9 @@ const getUsers = async (req, res, next) => {
 
 module.exports = {
   addUser,
+  getUsers,
   getUserById,
+  getUsersByDate,
   editUser,
   deleteUser,
-  getUsers,
-  getUsersByDate,
 };

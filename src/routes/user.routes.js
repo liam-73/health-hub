@@ -7,7 +7,7 @@ const router = new express.Router();
 const auth = require('../authentication/auth');
 
 // handlers
-const userHandlers = require('../handlers/user');
+const userHandlers = require('../handlers/user.handler');
 
 const storage = multer.memoryStorage();
 

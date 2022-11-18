@@ -20,10 +20,7 @@ const addAdmin = async (req, res, next) => {
   }
 
   try {
-    const admin = await adminControllers.addAdmin({
-      ...value,
-      hospital: req.hospital,
-    });
+    const admin = await adminControllers.addAdmin(value);
 
     res.status(201).json(admin);
   } catch (e) {

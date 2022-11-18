@@ -5,22 +5,22 @@ const { photoUpload } = require('../modules/photo');
 const { getDatesInRange } = require('../modules/dates');
 
 // schema
-const User = require('../models/user');
+const UserModel = require('../models/user.model');
 
 const addUser = async (userData, avatarData) => {
   try {
-    const isUsedEmail = await User.findOne({ email: request_body.email });
+    const isUsedEmail = await UserModel.findOne({ email: userData.email });
 
     if (isUsedEmail) throw new Error('This email is already used!');
 
     let profile;
 
-    if (file) {
+    if (avatarData) {
       profile = await photoUpload(avatarData);
     }
 
-    const user = await User.create({
-      ...request_body,
+    const user = await UserModel.create({
+      ...userData,
       profile,
     });
 
@@ -32,7 +32,7 @@ const addUser = async (userData, avatarData) => {
 
 const getUserById = async (user_id) => {
   try {
-    const user = await User.findById(user_id);
+    const user = await UserModel.findById(user_id);
 
     if (!user) throw new Error('User not found!');
 
@@ -60,7 +60,7 @@ const getUsers = async (query) => {
   }
 
   try {
-    const users = await User.find(filter)
+    const users = await UserModel.find(filter)
       .limit(+limit)
       .skip(+skip)
       .sort(sort);
@@ -72,7 +72,8 @@ const getUsers = async (query) => {
 };
 
 const getUserByEmail = async (email) => {
-  const user = await User.findOne(email);
+  const user = await UserModel.findOne({email});
+  console.log(user);
 
   if (!user) throw new Error('User not found!');
 
@@ -86,7 +87,7 @@ const getUsersByDate = async (start_date, end_date, user_type) => {
     const dates = getDatesInRange(start_date, end_date);
     end_date.setHours(23, 59);
 
-    const data = await User.aggregate([
+    const data = await UserModel.aggregate([
       {
         $match: {
           user_type: user_type ? 'PATIENT' : { $ne: 'PATIENT' },
@@ -127,25 +128,23 @@ const getUsersByDate = async (start_date, end_date, user_type) => {
   }
 };
 
-const editUser = async (request_body, user_id, file) => {
+const editUser = async ({ userId, userData, avatarData }) => {
   try {
-    const edits = Object.keys(request_body);
+    const edits = Object.keys(userData);
 
-    const user = await User.findById(user_id);
+    const user = await UserModel.findById(userId);
 
     if (!user) throw new Error('User not found!');
 
-    if (file) {
-      const profile = await photoUpload(file);
+    if (avatarData) {
+      const profile = await photoUpload(avatarData);
 
       user.profile = profile;
     }
 
-    edits.forEach((edit) => (user[edit] = request_body[edit]));
+    edits.forEach((edit) => (user[edit] = userData[edit]));
 
-    await user.save();
-
-    return user;
+    return await user.save();
   } catch (e) {
     throw e;
   }
@@ -153,13 +152,11 @@ const editUser = async (request_body, user_id, file) => {
 
 const deleteUser = async (user_id) => {
   try {
-    const user = await User.findById(user_id);
+    const user = await UserModel.findById(user_id);
 
     if (!user) throw new Error('User not found!');
 
-    await user.remove();
-
-    return user;
+    return await user.remove();
   } catch (e) {
     throw e;
   }

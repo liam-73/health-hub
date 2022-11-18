@@ -14,11 +14,6 @@ const adminSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-
-    hospital: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Hospital',
-    },
   },
   {
     timestamps: true,

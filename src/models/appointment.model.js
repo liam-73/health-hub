@@ -21,11 +21,6 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
-    hospital: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Hospital',
-    },
   },
   {
     timestamps: true,

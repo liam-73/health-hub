@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
     appointment_fee: Number,
     daily_token_numbers: Number,
 
-    type: {
+    user_type: {
       type: String,
       required: true,
     },
@@ -24,11 +24,6 @@ const userSchema = new mongoose.Schema(
     address: {
       type: String,
       default: ' ',
-    },
-
-    hospital: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Hospital',
     },
   },
   {

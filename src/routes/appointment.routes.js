@@ -16,7 +16,7 @@ router.post('/', upload.any(), appointmentHandlers.createAppointment );
 
 router.get( '/', appointmentHandlers.getAppointments );
 
-router.get( '/:id', appointmentHandlers.getAppointmentsById );
+router.get( '/:id', appointmentHandlers.getAppointmentById );
 
 router.patch( '/:id', upload.any(), appointmentHandlers.editAppointment );
 

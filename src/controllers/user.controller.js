@@ -17,10 +17,8 @@ const getUserById = async (user_id) => {
   return user;
 };
 
-const editUser = async (request_body, user_id, file) => {
-  const user = await userServices.editUser(request_body, user_id, file);
-
-  return user;
+const editUser = async (data) => {
+  return await userServices.editUser(data);
 };
 
 const deleteUser = async (user_id) => {

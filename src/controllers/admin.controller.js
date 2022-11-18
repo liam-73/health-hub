@@ -1,6 +1,6 @@
 const adminServices = require("../services/admin.services");
 
-const addNewAdmin = async (adminData) => {
+const addAdmin = async (adminData) => {
     return await adminServices.addAdmin(adminData);
 };
 
@@ -9,6 +9,6 @@ const login = async (data) => {
 };
 
 module.exports = {
-    addNewAdmin,
+    addAdmin,
     login,
 }
