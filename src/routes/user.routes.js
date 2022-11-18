@@ -41,6 +41,6 @@ router.patch('/:id', upload.single('profile'), userHandlers.editUser);
 
 router.delete('/:id', userHandlers.deleteUser);
 
-router.get('/rates', userHandlers.getUserByDate);
+router.get('/rates', userHandlers.getUsersByDate);
 
 module.exports = router;
