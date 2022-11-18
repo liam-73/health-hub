@@ -8,7 +8,7 @@ const adminHandlers = require("../handlers/admin");
 // authenticaion
 const auth =  require("../authentication/auth");
 
-router.post( "/add_admin", auth, adminHandlers.addNewAdmin );
+router.post( "/", auth, adminHandlers.addNewAdmin );
 
 router.post( "/login", adminHandlers.login );
 

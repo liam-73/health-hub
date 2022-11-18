@@ -15,10 +15,18 @@ const userProperties = [
 
 const patientProperties = [
     'diagnosis'
+];
+
+const USER_TYPES = [
+    'ADMIN',
+    'DOCTOR',
+    'PATIENT',
+    'EMPLOYEE'
 ]
 
 module.exports = {
     doctorPropeties,
     userProperties,
     patientProperties,
+    USER_TYPES,
 };

@@ -18,7 +18,8 @@ const notFoundErrors = [
     "There's no admin with this user id!",
     "Doctor not found!",
     "Patient not found!",
-    "Appointment not found!"
+    "Appointment not found!",
+    "User not found!",
 ];
 
 module.exports = {
