@@ -5,7 +5,7 @@ const AppointmentModel = require('../models/appointment.model');
 const TransactionModel = require('../models/transaction.model');
 const UserModel = require('../models/user.model');
 
-const createAppointment = async ({ doctor, patient, date }) => {
+const createAppointment = async ({ doctor, patient, date, reason }) => {
   try {
     const doctorData = await UserModel.findById(doctor);
 
@@ -15,7 +15,7 @@ const createAppointment = async ({ doctor, patient, date }) => {
     const appointments = await AppointmentModel.aggregate([
       {
         $match: {
-          date: moment().format('MM-DD-YYYY'),
+          date: moment(date).format('MM-DD-YYYY'),
           doctor,
         },
       },
@@ -34,6 +34,7 @@ const createAppointment = async ({ doctor, patient, date }) => {
         patient,
         fee: doctorData.appointment_fee,
         date: date ? date : moment().format('MM-DD-YYYY'),
+        reason,
       });
 
       await TransactionModel.create({
@@ -50,15 +51,8 @@ const createAppointment = async ({ doctor, patient, date }) => {
 };
 
 const getAppointments = async (query) => {
-  const {
-    skip,
-    limit,
-    sort,
-    start_date,
-    end_date,
-    doctor_id,
-    is_today_appts,
-  } = query;
+  const { skip, limit, sort, start_date, end_date, doctor_id, is_today_appts } =
+    query;
 
   let filter = {};
 

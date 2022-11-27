@@ -9,7 +9,7 @@ const userControllers = require('../controllers/user.controller');
 
 const addUser = async (req, res, next) => {
   const schema = Joi.object({
-    profile: Joi.string(),
+    profile: Joi.any(),
     name: Joi.string(),
     email: Joi.string().email().required(),
     gender: Joi.string(),

@@ -8,7 +8,8 @@ const createAppointment = async (req, res, next) => {
   const schema = Joi.object({
     doctor: Joi.objectid().required(),
     patient: Joi.objectid().required(),
-    date: Joi.date(),
+    date: Joi.date().default(new Date()),
+    reason: Joi.string(),
   });
 
   const { value, error } = schema.validate(req.body);

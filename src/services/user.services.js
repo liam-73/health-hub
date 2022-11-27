@@ -17,6 +17,7 @@ const addUser = async (userData, avatarData) => {
 
     if (avatarData) {
       profile = await photoUpload(avatarData);
+      console.log(profile);
     }
 
     const user = await UserModel.create({
@@ -72,7 +73,7 @@ const getUsers = async (query) => {
 };
 
 const getUserByEmail = async (email) => {
-  const user = await UserModel.findOne({email});
+  const user = await UserModel.findOne({ email });
   console.log(user);
 
   if (!user) throw new Error('User not found!');
