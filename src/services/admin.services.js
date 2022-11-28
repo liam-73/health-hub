@@ -4,6 +4,10 @@ const { authToken } = require('../authentication/generateToken');
 const Admin = require('../models/admin.model');
 
 const addAdmin = async (adminData) => {
+  const isExisted = await Admin.findOne({ email: adminData.email });
+
+  if (isExisted) throw new Error('This email is already used');
+
   try {
     const admin = await new Admin(adminData);
 

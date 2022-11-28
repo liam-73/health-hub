@@ -61,6 +61,8 @@ const getUsers = async (req, res, next) => {
     skip: Joi.number().integer().default(0),
     limit: Joi.number().integer().default(10),
     sort: Joi.any().default('-createdAt'),
+    start_date: Joi.string(),
+    end_date: Joi.string(),
     search: Joi.string(),
     user_type: Joi.string().valid(...USER_TYPES),
     is_all_employees: Joi.boolean().default(false),
@@ -212,9 +214,9 @@ const deleteUser = async (req, res, next) => {
   }
 
   try {
-    const user = await userControllers.deleteUser(value.id);
+    await userControllers.deleteUser(value.id);
 
-    res.json(user);
+    res.status(200).send();
   } catch (e) {
     next(e);
   }

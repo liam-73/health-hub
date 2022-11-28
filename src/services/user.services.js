@@ -44,12 +44,25 @@ const getUserById = async (user_id) => {
 };
 
 const getUsers = async (query) => {
-  const { skip, limit, sort, search, user_type, is_all_employees } = query;
+  const {
+    skip,
+    limit,
+    sort,
+    search,
+    start_date,
+    end_date,
+    user_type,
+    is_all_employees,
+  } = query;
 
   let filter = {};
 
   if (search) {
     filter.name = new RegExp(search, 'i');
+  }
+
+  if (start_date && end_date) {
+    filter.createdAt = { $gt: start_date, $lt: end_date };
   }
 
   if (user_type && !is_all_employees) {

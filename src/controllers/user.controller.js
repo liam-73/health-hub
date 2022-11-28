@@ -22,9 +22,7 @@ const editUser = async (data) => {
 };
 
 const deleteUser = async (user_id) => {
-  const user = await userServices.deleteUser(user_id);
-
-  return user;
+  return await userServices.deleteUser(user_id);
 };
 
 const getUsers = async (query) => {
