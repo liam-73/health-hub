@@ -16,6 +16,7 @@ const addUser = async (userData, avatarData) => {
     let profile;
 
     if (avatarData) {
+      console.log({ avatarData });
       profile = await photoUpload(avatarData);
       console.log(profile);
     }
@@ -67,6 +68,12 @@ const getUsers = async (query) => {
 
   if (user_type && !is_all_employees) {
     filter.user_type = user_type;
+  }
+
+  if (user_type == 'EMPLOYEE') {
+    filter.user_type = {
+      $nin: ['DOCTOR', 'PATIENT'],
+    };
   }
 
   if (is_all_employees) {

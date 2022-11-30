@@ -15,9 +15,7 @@ const addUser = async (req, res, next) => {
     gender: Joi.string(),
     dateOfBirth: Joi.string(),
     address: Joi.string(),
-    user_type: Joi.string()
-      .valid(...USER_TYPES)
-      .required(),
+    user_type: Joi.string().required(),
     diagnosis: Joi.string().when('user_type', {
       is: 'PATIENT',
       then: Joi.string().required(),
