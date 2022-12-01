@@ -22,7 +22,7 @@ const auth = async (req, res, next) => {
         error: {
           code: 401,
           message: e.message,
-        }
+        },
       });
     }
 
@@ -30,7 +30,7 @@ const auth = async (req, res, next) => {
       error: {
         code: 500,
         message: e.message,
-      }
+      },
     });
   }
 };

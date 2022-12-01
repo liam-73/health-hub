@@ -8,7 +8,7 @@ const createAppointment = async (req, res, next) => {
   const schema = Joi.object({
     doctor: Joi.objectid().required(),
     patient: Joi.objectid().required(),
-    date: Joi.date().default(new Date()),
+    date: Joi.string(),
     reason: Joi.string(),
   });
 
@@ -37,13 +37,13 @@ const getAppointments = async (req, res, next) => {
     skip: Joi.number().default(0),
     limit: Joi.number().default(10),
     sort: Joi.any().default('-createdAt'),
-    start_date: Joi.date(),
-    end_date: Joi.date(),
+    start_date: Joi.string(),
+    end_date: Joi.string(),
     doctor_id: Joi.objectid(),
     is_today_appts: Joi.boolean().default(false),
   });
 
-  const { value, error } = schema.validate(req.body);
+  const { value, error } = schema.validate(req.query);
 
   if (error) {
     return res.status(400).send({
@@ -80,7 +80,9 @@ const getAppointmentById = async (req, res, next) => {
   }
 
   try {
-    const appointment = await appointmentController.getAppointmentsById(value);
+    const appointment = await appointmentController.getAppointmentById(
+      value.id,
+    );
 
     res.json(appointment);
   } catch (e) {

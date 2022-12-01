@@ -8,10 +8,10 @@ const getTransactions = async ({ start_date, end_date, doctor_id }) => {
       end_date,
     );
   } else if (doctor_id) {
-    return await transactionServices.getTransactionsOfDoctor(doctor_id);
+    return await transactionServices.getTransactionsByDoctorId(doctor_id);
   }
 
-  return await transactionServices.getAllTransactions(query);
+  return await transactionServices.getAllTransactions();
 };
 
 module.exports = {

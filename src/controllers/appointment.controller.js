@@ -10,7 +10,7 @@ const getAppointments = async (query) => {
 };
 
 const getAppointmentById = async (appointmentId) => {
-  return await appointmentServices.getAppointmentsById(appointmentId);
+  return await appointmentServices.getAppointmentById(appointmentId);
 };
 
 const editAppointment = async (data) => {

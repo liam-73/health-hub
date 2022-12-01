@@ -43,4 +43,6 @@ router.delete('/:id', userHandlers.deleteUser);
 
 router.get('/rates', userHandlers.getUsersByDate);
 
+router.get('/:id/appointments', userHandlers.getAppointmentsByUserId);
+
 module.exports = router;

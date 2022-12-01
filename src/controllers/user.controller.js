@@ -1,4 +1,5 @@
 const userServices = require('../services/user.services');
+const appointmentServices = require('../services/appointment.services');
 
 const {
   doctorPropeties,
@@ -37,6 +38,10 @@ const getUsersByDate = async (start_date, end_date, user_type) => {
   return await userServices.getUsersByDate(start_date, end_date, user_type);
 };
 
+const getAppointmentsByUserId = async (user_id) => {
+  return await appointmentServices.getAppointmentsByUserId(user_id);
+};
+
 module.exports = {
   addUser,
   getUserById,
@@ -44,4 +49,5 @@ module.exports = {
   deleteUser,
   getUsers,
   getUsersByDate,
+  getAppointmentsByUserId,
 };

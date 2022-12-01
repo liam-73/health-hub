@@ -116,7 +116,9 @@ const getUsersByDate = async (req, res, next) => {
   const schema = Joi.object({
     start_date: Joi.string().required(),
     end_date: Joi.string().required(),
-    user_type: Joi.string().valid('PATIENT', 'EMPLOYEE').default('PATIENT'),
+    user_type: Joi.string()
+      .valid('PATIENT', 'DOCTOR', 'EMPLOYEE')
+      .default('PATIENT'),
   });
 
   const { value, error } = schema.validate(req.query);
@@ -163,15 +165,14 @@ const editUser = async (req, res, next) => {
       gender: Joi.string(),
       dateOfBirth: Joi.string(),
       address: Joi.string(),
+      diagnosis: Joi.string(),
       degree: Joi.string(),
       appointment_fee: Joi.number(),
       daily_token_numbers: Joi.number(),
     },
-  });
+  }).unknown(true);
 
   const { value, error } = schema.validate(req);
-
-  console.log(error);
 
   if (error) {
     return res.status(400).send({
@@ -220,6 +221,32 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+const getAppointmentsByUserId = async (req, res, next) => {
+  const schema = Joi.object({
+    id: Joi.objectid().required(),
+  });
+
+  const { value, error } = schema.validate(req.params);
+
+  if (error) {
+    return res.status(400).send({
+      error: {
+        code: 400,
+        message: error.details[0].message,
+      },
+    });
+  }
+
+  try {
+    const { appointments, count } =
+      await userControllers.getAppointmentsByUserId(value.id);
+
+    res.json({ appointments, count });
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   addUser,
   getUsers,
@@ -227,4 +254,5 @@ module.exports = {
   getUsersByDate,
   editUser,
   deleteUser,
+  getAppointmentsByUserId,
 };

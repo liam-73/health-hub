@@ -31,34 +31,6 @@ const getTransactions = async (req, res, next) => {
   }
 };
 
-const getTransactionsByDoctorId = async (req, res, next) => {
-  try {
-    if (!req.query.doctor_id) throw new Error('You must provide doctor id!');
-
-    const transaction = await transactionControllers.getTransactionsOfDoctor(
-      req.query.doctor_id,
-    );
-
-    res.json(transaction);
-  } catch (e) {
-    next(e);
-  }
-};
-const getTransactionsByDate = async (req, res, next) => {
-  
-
-  try {
-    const transacitions = await transactionControllers.getTransactionsByDate(
-      value.query.start_date,
-      value.end_date,
-    );
-
-    res.json(transacitions);
-  } catch (e) {
-    next(e);
-  }
-};
-
 module.exports = {
   getTransactions,
 };
